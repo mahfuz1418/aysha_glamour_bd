@@ -48,13 +48,13 @@
                             <tr>
                                 <th scope="col">Serial</th>
                                 <th scope="col">Category Name</th>
-                                {{-- <th scope="col">Slug</th> --}}
+                                <th scope="col">Slug</th>
                                 <th scope="col">Active Status</th>
                                 <th scope="col">Register Date</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
-                        {{-- <tbody>
+                        <tbody>
                             @php
                                 $serials = ($categories->currentpage() - 1) * $categories->perpage() + 1;
                             @endphp
@@ -62,16 +62,18 @@
                                 <tr>
                                     <th scope="row">{{ $serials++ }}</th>
                                     <td>{{ $category->name }}</td>
+                                    <td>{{ $category->slug }}</td>
                                     <td><span
                                             class="badge badge-{{ $category->active_status == 0 ? 'danger': 'success' }}">{{ $category->active_status == 0 ? 'Inactive': 'Active' }}</span>
                                     </td>
-                                    <td>{{ $category->created_at->toFormateDate() }}</td>
+                                    <td>{{ $category->created_at }}</td>
                                     <td>
 
                                         <button type="button" data-toggle="modal" data-target="#editNew"
                                             data-id="{{ $category->id }}"
                                             data-name="{{ $category->name }}"
-                                            data-status="{{ $category->active_status }}"
+                                            data-slug="{{ $category->slug }}"
+                                            data-active_status="{{ $category->active_status }}"
                                             class="btn btn-success btn-sm editData">
                                             <i class="fas fa-edit"></i>
                                         </button>
@@ -81,10 +83,10 @@
                                     </td>
                                 </tr>
                             @endforeach
-                        </tbody> --}}
+                        </tbody>
                     </table>
                     <div class="float-right my-2">
-                        {{-- {{ $categories->links() }} --}}
+                        {{ $categories->links() }}
                     </div>
                 </div>
             </div>
@@ -111,7 +113,7 @@
                             <input type="text" class="form-control" name="categoryName" id="categoryName"
                                 placeholder="Enter Category Name" onkeyup="Updateslug()">
 
-                            <span class="text-danger validate" id="errors_category"></span>
+                            <span class="text-danger validate" data-field="categoryName"></span>
                         </div>
 
                         <div class="form-group">
@@ -119,7 +121,7 @@
                             <input type="text" class="form-control" readonly name="slug" id="slug"
                                 placeholder="Slug Here..." >
 
-                            <span class="text-danger validate" id="errors_slug"></span>
+                            <span class="text-danger validate" data-field="slug"></span>
                         </div>
 
                         <div class="form-group">
@@ -130,7 +132,7 @@
                                 <option value="0">Inactive</option>
                                 <option value="1">Active</option>
                             </select>
-                            <span class="text-danger validate" id="errors_status"></span>
+                            <span class="text-danger validate" data-field="active_status"></span>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -154,32 +156,39 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-
-                <form id="editData">
-                    <input type="hidden" name="id" id="id_e">
+                <form id="updateData">
                     <div class="modal-body">
+                        <input type="text" id="id_e" name="id_e" hidden>
                         <div class="form-group">
-                            <label for="name1">Category Name</label>
-                            <input type="text" class="form-control" name="name" id="name_e"
-                                placeholder="Enter Category Name" value="">
+                            <label for="categoryName">Category Name</label>
+                            <input type="text" class="form-control" name="categoryName" id="categoryName_e"
+                                placeholder="Enter Category Name" onkeyup="UpdateslugE()">
 
-                            <span class="text-danger" id="errors_name_e"></span>
+                            <span class="text-danger validate" data-field="categoryName"></span>
                         </div>
 
                         <div class="form-group">
-                            <label for="active_status1">Active Status</label>
+                            <label for="slug">Category Slug</label>
+                            <input type="text" class="form-control" readonly name="slug" id="slug_e"
+                                placeholder="Slug Here..." >
+
+                            <span class="text-danger validate" data-field="slug"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="active_status">Active Status</label>
                             <select class="form-control select2" name="active_status" id="active_status_e"
                                 data-placeholder="Select Active Status" style="width: 100%">
                                 <option value="">Choose Type</option>
                                 <option value="0">Inactive</option>
                                 <option value="1">Active</option>
                             </select>
-                            <span class="text-danger" id="errors_status_e"></span>
+                            <span class="text-danger validate" data-field="active_status"></span>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>
@@ -210,7 +219,27 @@
     </script>
 
     <script>
+        function createSlugE(categoryName)
+        {
+            const slug = categoryName.replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+            return slug.toLowerCase();
+        }
+
+        function UpdateslugE()
+        {
+            const categoryInput = document.getElementById('categoryName_e');
+            const slugOutput = document.getElementById('slug_e');
+
+            const categoryName = categoryInput.value;
+            const slug = createSlug(categoryName);
+            slugOutput.value = slug;
+        }
+    </script>
+
+    <script>
         $(document).ready(function () {
+
+            // STORE CATEGORY
             $("#formData").submit(function(e) {
                 e.preventDefault();
                 var formdata = new FormData($("#formData")[0]);
@@ -226,30 +255,70 @@
                     success: function(response) {
                         if (response.success) {
                             toastr.success(response.success);
-                        } else if (response.error) {
-                            toastr.error(response.error);
                         }
-                        console.log(response);
                     },
-                    error: function(error) {
+                    error: function (error) {
                         $('.validate').text('');
-                        $.each(error.responseJSON.errors, function(field_name, error) {
-                            const errorElement = $('.validate[data-field="' +
-                                field_name + '"]');
-                            if (errorElement.length > 0) {
+                        $.each(error.responseJSON.errors, function (field_name, error) {
+                             const errorElement = $('.validate[data-field="' + field_name + '"]');
+                             if (errorElement.length > 0) {
                                 errorElement.text(error[0]);
                                 toastr.error(error);
-                            }
+                             }
                         });
-                        toastr.error(error);
-
                     },
-                    // complete: function(done) {
-                    //     if (done.status == 200) {
-                    //         window.location.reload();
-                    //     }
-                    // }
+                    complete: function(done) {
+                        if (done.status == 200) {
+                            window.location.reload();
+                        }
+                    }
 
+                });
+            });
+
+            // SHOW DATA WHEN CLICK ON EDIT BUTTON
+            $('.editData').click(function (e) {
+                e.preventDefault();
+                $('#editmodal').modal('show');
+                $('#id_e').val($(this).data('id'));
+                $('#categoryName_e').val($(this).data('name'));
+                $('#slug_e').val($(this).data('slug'));
+                $('#active_status_e').val($(this).data('active_status')).trigger('change');
+            });
+
+            // STORE CATEGORY
+            $("#updateData").submit(function(e) {
+                e.preventDefault();
+                var formdata = new FormData($("#updateData")[0]);
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('edit-category') }}",
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: formdata,
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.success);
+                        }
+                    },
+                    error: function (error) {
+                        $('.validate').text('');
+                        $.each(error.responseJSON.errors, function (field_name, error) {
+                             const errorElement = $('.validate[data-field="' + field_name + '"]');
+                             if (errorElement.length > 0) {
+                                errorElement.text(error[0]);
+                                toastr.error(error);
+                             }
+                        });
+                    },
+                    complete: function(done) {
+                        if (done.status == 200) {
+                            window.location.reload();
+                        }
+                    }
 
                 });
             });

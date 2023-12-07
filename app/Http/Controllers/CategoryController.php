@@ -11,7 +11,8 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        return view('backend.product.category');
+        $categories = Category::paginate(10);
+        return view('backend.product.category', compact('categories'));
     }
 
     public function storeCategory(Request $request)
@@ -31,16 +32,38 @@ class CategoryController extends Controller
         $category->slug = $request->slug;
         $category->active_status = $request->active_status;
         $category->created_by = Auth::id();
+        $category->save();
+
+        if ($category) {
+            return response()->json([
+                'success' => 'Category Added Successfully',
+            ]);
+        }
+
+    }
+
+    public function editCategory(Request $request)
+    {
+        $validatorData = Validator::make($request->all(), [
+            'categoryName' => 'required|string|max:255|unique:categories,name',
+            'slug' => 'required|string|max:255',
+            'active_status' =>  'required|in:0,1',
+        ],[
+            'categoryName.required' => 'Please Enter The Category Name',
+            'slug.required' => 'Slug Name Can Not Be Empty',
+            'active_status.required' =>  'Please Select The Status',
+        ])->validate();
+
+        $category = Category::findOrFail($request->id_e);
+        $category->name = $request->categoryName;
+        $category->slug = $request->slug;
+        $category->active_status = $request->active_status;
         $category->updated_by = Auth::id();
         $category->save();
 
         if ($category) {
             return response()->json([
-                'success' => true,
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
+                'success' => 'Category Updated Successfully',
             ]);
         }
 
