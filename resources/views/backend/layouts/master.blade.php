@@ -104,7 +104,10 @@
 <script src="{{ asset('backend/dist/js/demo.js') }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('backend/dist/js/pages/dashboard.js') }}"></script>
+<!-- Sweet Alert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<!-- Pre Loader -->
 <script>
     $(document).ready(function () {
         window.onload = function() {
@@ -117,8 +120,55 @@
                 $('.wrapper').show();
         };
     });
-
 </script>
+
+<!-- Sweet Alert -->
+<script>
+    $(document).ready(function () {
+        $("#delete").on('click', function (e) {
+            e.preventDefault();
+            var link = $(this).attr("href");
+            const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+            }).then((result) => {
+            if (result.isConfirmed) {
+
+                window.location.href = link;
+                swalWithBootstrapButtons.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success"
+                });
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire({
+                title: "Cancelled",
+                text: "Your imaginary file is safe :)",
+                icon: "error"
+                });
+            }
+            });
+        });
+
+    });
+</script>
+
+
 @yield('script')
 </body>
 </html>

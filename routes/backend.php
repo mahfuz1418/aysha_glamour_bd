@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubCategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,8 +34,13 @@ Route::middleware('auth')->group(function () {
 Route::get('/category', [CategoryController::class, 'index'])->name('category');
 Route::post('/store-category', [CategoryController::class, 'storeCategory'])->name('store-category');
 Route::post('/edit-category', [CategoryController::class, 'editCategory'])->name('edit-category');
-Route::get('/delete-category', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+Route::get('/delete-category/{cat_id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+Route::get('/restore-category/{id}', [CategoryController::class, 'resotoreCategory'])->name('deleteCategory');
+Route::get('/restore-all-category', [CategoryController::class, 'resotoreAllCategory'])->name('restoreAllCategory');
 
+// Category
+Route::get('/sub-category', [SubCategoryController::class, 'index'])->name('sub-category');
+Route::post('/store-subcategory', [SubCategoryController::class, 'storeSubcategory'])->name('store-subcategory');
 
 
 

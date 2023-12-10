@@ -62,7 +62,7 @@
                         <p class="p-0 text-primary">Mr Zahid<small class="p-0 text-success">(Admin)</small></p>
                     </li>
                     <li class="list-group-item bg-light-blue">
-                        <a href="#"><i class="far fa-user"></i>
+                        <a href="{{ route('profile.edit') }}"><i class="far fa-user"></i>
                             Profile
                         </a>
                     </li>

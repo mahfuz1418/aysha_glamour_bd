@@ -44,8 +44,9 @@
         <div class="row align-items-center">
             <!--Desktop Logo-->
             <div class="logo col-md-2 col-lg-2 d-none d-lg-block">
-                <a href="index.html">
+                <a href="{{ url('/') }}">
                     <img src="{{ asset('frontend') }}/assets/images/logo.svg" alt="Belle Multipurpose Html Template" title="Belle Multipurpose Html Template" />
+                    {{-- <img src="{{ asset('frontend/assets/images/logo.png') }}" alt="Belle Multipurpose Html Template" title="Belle Multipurpose Html Template" height="50px" /> --}}
                 </a>
             </div>
             <!--End Desktop Logo-->

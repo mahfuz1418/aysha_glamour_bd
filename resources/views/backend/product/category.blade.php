@@ -41,7 +41,14 @@
                 </form>
             </div>
             <div class="card">
-                <div class="card-header">Categories Table</div>
+                <div class="card-header d-flex">
+                    <div>Categories Table</div>
+                    <div class="ml-auto">
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter">
+                            <i class="fas fa-recycle"></i> Recycle Bin
+                          </button>
+                    </div>
+                </div>
                 <div class="card-body">
                     <table class="table table-bordered">
                         <thead>
@@ -58,7 +65,7 @@
                             @php
                                 $serials = ($categories->currentpage() - 1) * $categories->perpage() + 1;
                             @endphp
-                            @foreach($categories as $category)
+                            @forelse($categories as $category)
                                 <tr>
                                     <th scope="row">{{ $serials++ }}</th>
                                     <td>{{ $category->name }}</td>
@@ -66,7 +73,7 @@
                                     <td><span
                                             class="badge badge-{{ $category->active_status == 0 ? 'danger': 'success' }}">{{ $category->active_status == 0 ? 'Inactive': 'Active' }}</span>
                                     </td>
-                                    <td>{{ $category->created_at }}</td>
+                                    <td>{{ $category->created_at->format('d/m/Y') }}</td>
                                     <td>
 
                                         <button type="button" data-toggle="modal" data-target="#editNew"
@@ -82,7 +89,11 @@
 
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="10" class="text-center text-danger font-italic font-weight-bold">No Category Added</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                     <div class="float-right my-2">
@@ -196,6 +207,58 @@
     </div>
 </div>
 
+<!-- Recycle Bin -->
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Recycle Bin</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            <a href="{{ route('restoreAllCategory') }}" class="btn btn-info"><i class="fas fa-recycle"></i> Restore All</a>
+        </div>
+        <div class="modal-body">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Category Name</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                    @forelse ($trashCategories as $tc)
+                        <tr>
+                            <th scope="row">{{ $loop->iteration }}</th>
+                            <td>{{ $tc->name }}</td>
+                            <td>
+                                <a href="{{ url('restore-category/'. $tc->id) }}"
+                                    id="delete" class="btn btn-info btn-sm"><i class="fas fa-recycle"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="10" class="text-center text-danger font-italic font-weight-bold">Empty Recycle Bin</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+              </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 @endsection
 
 @section('script')
@@ -286,7 +349,7 @@
                 $('#active_status_e').val($(this).data('active_status')).trigger('change');
             });
 
-            // STORE CATEGORY
+            // EDIT CATEGORY
             $("#updateData").submit(function(e) {
                 e.preventDefault();
                 var formdata = new FormData($("#updateData")[0]);
@@ -324,5 +387,11 @@
             });
         });
     </script>
+
+    @if (Session::has('message'))
+        <script>
+            toastr.success("{{ Session::get('message') }}");
+        </script>
+    @endif
 
 @endsection

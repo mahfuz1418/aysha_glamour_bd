@@ -11,8 +11,9 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::paginate(10);
-        return view('backend.product.category', compact('categories'));
+        $data['categories'] = Category::paginate(10);
+        $data['trashCategories'] = Category::onlyTrashed()->get();
+        return view('backend.product.category', $data);
     }
 
     public function storeCategory(Request $request)
@@ -44,17 +45,24 @@ class CategoryController extends Controller
 
     public function editCategory(Request $request)
     {
-        $validatorData = Validator::make($request->all(), [
-            'categoryName' => 'required|string|max:255|unique:categories,name',
+        $category = Category::findOrFail($request->id_e);
+
+        if ($category->name != $request->categoryName) {
+            $check_cat = array(
+                'categoryName' => 'required|string|max:255|unique:categories,name',
+            );
+        } else {
+            $check_cat = array();
+        }
+
+        $check_all = array(
             'slug' => 'required|string|max:255',
             'active_status' =>  'required|in:0,1',
-        ],[
-            'categoryName.required' => 'Please Enter The Category Name',
-            'slug.required' => 'Slug Name Can Not Be Empty',
-            'active_status.required' =>  'Please Select The Status',
-        ])->validate();
+        );
+        $marge = array_merge($check_cat, $check_all);
+        $validatorData = Validator::make($request->all(), $marge)->validate();
 
-        $category = Category::findOrFail($request->id_e);
+
         $category->name = $request->categoryName;
         $category->slug = $request->slug;
         $category->active_status = $request->active_status;
@@ -66,6 +74,24 @@ class CategoryController extends Controller
                 'success' => 'Category Updated Successfully',
             ]);
         }
+
+    }
+
+    public function deleteCategory($cat_id)
+    {
+        $category = Category::findOrFail($cat_id)->delete();
+        return redirect()->back();
+    }
+
+    public function resotoreCategory($id)
+    {
+        $restoreCategory = Category::onlyTrashed()->find($id)->restore();
+        return back()->with('message', 'Category Restored Successfully');
+    }
+    public function resotoreAllCategory()
+    {
+        $restoreCategory = Category::onlyTrashed()->where('deleted_at', '!=' , null)->restore();
+        return back()->with('message', 'All Category Restored Successfully');
 
     }
 }
