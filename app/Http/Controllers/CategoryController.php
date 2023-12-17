@@ -40,7 +40,6 @@ class CategoryController extends Controller
                 'success' => 'Category Added Successfully',
             ]);
         }
-
     }
 
     public function editCategory(Request $request)
@@ -92,6 +91,5 @@ class CategoryController extends Controller
     {
         $restoreCategory = Category::onlyTrashed()->where('deleted_at', '!=' , null)->restore();
         return back()->with('message', 'All Category Restored Successfully');
-
     }
 }

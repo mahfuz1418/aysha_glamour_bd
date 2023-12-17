@@ -29,7 +29,7 @@
         <div class="container-fluid">
             <div class="d-flex justify-content-between my-1">
                 <div>
-                    <button type="button" class="btn btn-success addnew" data-toggle="modal" data-target="#addNew">
+                    <button type="button" class="btn btn-success addnew myCategory" data-toggle="modal" data-target="#addNew">
                         <i class="fas fa-plus"></i> Add Category
                     </button>
                 </div>
@@ -106,7 +106,7 @@
 
 
 
-    <!-- Modal -->
+    <!-- Add Category -->
     <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -121,8 +121,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="categoryName">Category Name</label>
-                            <input type="text" class="form-control" name="categoryName" id="categoryName"
-                                placeholder="Enter Category Name" onkeyup="Updateslug()">
+                            <input type="text" class="form-control" name="categoryName" id="categoryName"  placeholder="Enter Category Name" onkeyup="Updateslug()">
 
                             <span class="text-danger validate" data-field="categoryName"></span>
                         </div>
@@ -221,7 +220,7 @@
           </button>
         </div>
         <div class="d-flex justify-content-center mt-3">
-            <a href="{{ route('restoreAllCategory') }}" class="btn btn-info"><i class="fas fa-recycle"></i> Restore All</a>
+            <a href="{{ route('restore-all-Category') }}" class="btn btn-info"><i class="fas fa-recycle"></i> Restore All</a>
         </div>
         <div class="modal-body">
             <table class="table">
@@ -279,9 +278,7 @@
             const slug = createSlug(categoryName);
             slugOutput.value = slug;
         }
-    </script>
 
-    <script>
         function createSlugE(categoryName)
         {
             const slug = categoryName.replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
@@ -299,9 +296,17 @@
         }
     </script>
 
+    {{-- CLEAR TEXT BY CLICKING BUTTON  --}}
+    {{-- <script>
+        document.querySelector('.myCategory').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('#categoryName').value = "";
+            document.querySelector('#slug').value = "";
+        });
+    </script> --}}
+
     <script>
         $(document).ready(function () {
-
             // STORE CATEGORY
             $("#formData").submit(function(e) {
                 e.preventDefault();

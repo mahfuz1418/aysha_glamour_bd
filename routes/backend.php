@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCategoryController;
 use Illuminate\Support\Facades\Route;
@@ -25,28 +26,42 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+    // Category
+    Route::get('/category', [CategoryController::class, 'index'])->name('category');
+    Route::post('/store-category', [CategoryController::class, 'storeCategory'])->name('store-category');
+    Route::post('/edit-category', [CategoryController::class, 'editCategory'])->name('edit-category');
+    Route::get('/delete-category/{cat_id}', [CategoryController::class, 'deleteCategory'])->name('delete-category');
+    Route::get('/restore-category/{id}', [CategoryController::class, 'resotoreCategory'])->name('restore-category');
+    Route::get('/restore-all-category', [CategoryController::class, 'resotoreAllCategory'])->name('restore-all-Category');
+
+    //Sub Category
+    Route::get('/sub-category', [SubCategoryController::class, 'index'])->name('sub-category');
+    Route::post('/store-subcategory', [SubCategoryController::class, 'storeSubcategory'])->name('store-subcategory');
+    Route::post('/edit-subcategory', [SubCategoryController::class, 'editSubcategory'])->name('edit-subcategory');
+    Route::get('/delete-subcategory/{sub_id}', [SubCategoryController::class, 'deleteSubcategory'])->name('delete-subcategory');
+    Route::get('/restore-subcategory/{id}', [SubCategoryController::class, 'resotoreSubcategory'])->name('restore-subcategory');
+    Route::get('/restore-all-subcategory', [SubCategoryController::class, 'resotoreAllSubcategory'])->name('restore-all-subcategory');
+
+    // Product
+    Route::get('/products', [ProductController::class, 'index'])->name('products');
+    Route::post('/store-product', [ProductController::class, 'storeProduct'])->name('store-product');
+    Route::get('/edit-product', [ProductController::class, 'editProduct'])->name('edit-product');
+    Route::get('/delete-product', [ProductController::class, 'deleteProduct'])->name('delete-product');
+    Route::get('/restore-product/{id}', [ProductController::class, 'resotoreProduct'])->name('restore-product');
+    Route::get('/restore-all-product', [ProductController::class, 'resotoreAllProduct'])->name('restore-all-Product');
+    // Get Sub Category
+    Route::get('/get-subcategory-ajax', [ProductController::class, 'getSubcategoryAjax'])->name('get-subcategory');
+
+
+
+
 });
-
-// Category
-Route::get('/category', [CategoryController::class, 'index'])->name('category');
-Route::post('/store-category', [CategoryController::class, 'storeCategory'])->name('store-category');
-Route::post('/edit-category', [CategoryController::class, 'editCategory'])->name('edit-category');
-Route::get('/delete-category/{cat_id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
-Route::get('/restore-category/{id}', [CategoryController::class, 'resotoreCategory'])->name('deleteCategory');
-Route::get('/restore-all-category', [CategoryController::class, 'resotoreAllCategory'])->name('restoreAllCategory');
-
-// Category
-Route::get('/sub-category', [SubCategoryController::class, 'index'])->name('sub-category');
-Route::post('/store-subcategory', [SubCategoryController::class, 'storeSubcategory'])->name('store-subcategory');
-
-
-
-
-
-
 
 
 

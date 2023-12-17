@@ -87,7 +87,7 @@
                                             class="btn btn-success btn-sm editData">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <a href="{{ url('delete-category/'. $sub_cat->id) }}"
+                                        <a href="{{ url('delete-subcategory/'. $sub_cat->id) }}"
                                             id="delete" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
 
                                     </td>
@@ -176,7 +176,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Category</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Subcategory</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -188,7 +188,6 @@
                             <label for="parent_id">Select Category</label>
                             <select class="form-control select2" name="parent_id" id="parent_id_e" style="width: 100%"
                                 data-placeholder="Select Subcategory">
-                                <option value="" selected>Select Subcategory</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
@@ -246,7 +245,7 @@
           </button>
         </div>
         <div class="d-flex justify-content-center mt-3">
-            <a href="{{ route('restoreAllCategory') }}" class="btn btn-info"><i class="fas fa-recycle"></i> Restore All</a>
+            <a href="{{ route('restore-all-subcategory') }}" class="btn btn-info"><i class="fas fa-recycle"></i> Restore All</a>
         </div>
         <div class="modal-body">
             <table class="table">
@@ -257,14 +256,14 @@
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
-                {{-- <tbody>
+                <tbody>
 
-                    @forelse ($trashCategories as $tc)
+                    @forelse ($trashsubcategories as $items)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
-                            <td>{{ $tc->name }}</td>
+                            <td>{{ $items->name }}</td>
                             <td>
-                                <a href="{{ url('restore-category/'. $tc->id) }}"
+                                <a href="{{ url('restore-subcategory/'. $items->id) }}"
                                     id="delete" class="btn btn-info btn-sm"><i class="fas fa-recycle"></i>
                                 </a>
                             </td>
@@ -274,7 +273,7 @@
                             <td colspan="10" class="text-center text-danger font-italic font-weight-bold">Empty Recycle Bin</td>
                         </tr>
                     @endforelse
-                </tbody> --}}
+                </tbody>
               </table>
         </div>
         <div class="modal-footer">
@@ -375,13 +374,13 @@
                 $('#parent_id_e').val($(this).data('category_name')).trigger('change');
             });
 
-            // EDIT CATEGORY
+            // EDIT SUBCATEGORY
             $("#updateData").submit(function(e) {
                 e.preventDefault();
                 var formdata = new FormData($("#updateData")[0]);
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('edit-category') }}",
+                    url: "{{ route('edit-subcategory') }}",
                     contentType: false,
                     processData: false,
                     headers: {

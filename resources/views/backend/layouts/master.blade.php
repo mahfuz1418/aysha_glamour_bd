@@ -168,6 +168,25 @@
     });
 </script>
 
+<!-- Image Preview When Upload -->
+<script>
+    function pleasePreview(input, previewId) {
+            var selectorIdAndClass = $('#' + previewId);
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    selectorIdAndClass.removeClass('d-none');
+                    selectorIdAndClass.attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                alert('Select a file to see the preview');
+                selectorIdAndClass.attr('src', '');
+            }
+    }
+</script>
+
 
 @yield('script')
 </body>

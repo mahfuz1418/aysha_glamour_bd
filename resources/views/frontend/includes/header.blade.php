@@ -46,7 +46,7 @@
             <div class="logo col-md-2 col-lg-2 d-none d-lg-block">
                 <a href="{{ url('/') }}">
                     <img src="{{ asset('frontend') }}/assets/images/logo.svg" alt="Belle Multipurpose Html Template" title="Belle Multipurpose Html Template" />
-                    {{-- <img src="{{ asset('frontend/assets/images/logo.png') }}" alt="Belle Multipurpose Html Template" title="Belle Multipurpose Html Template" height="50px" /> --}}
+                    {{-- <img src="{{ asset('frontend/assets/images/logo.jpg') }}" alt="Belle Multipurpose Html Template" title="Belle Multipurpose Html Template" height="50px" /> --}}
                 </a>
             </div>
             <!--End Desktop Logo-->

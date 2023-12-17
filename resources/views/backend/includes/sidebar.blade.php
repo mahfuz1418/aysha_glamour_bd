@@ -38,8 +38,8 @@
               </p>
             </a>
           </li>
-          <li class="nav-item {{ request()->is(['category', 'sub-category']) ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{  request()->is(['category', 'sub-category']) ? 'active' : ''  }}">
+          <li class="nav-item {{ request()->is(['category', 'sub-category', 'products']) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{  request()->is(['category', 'sub-category', 'products']) ? 'active' : ''  }}">
                 <i class="nav-icon fas fa-parking"></i>
               <p>
                 Product Management
@@ -60,7 +60,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="pages/layout/boxed.html" class="nav-link">
+                <a href="{{ route('products') }}" class="nav-link {{ request()->is(['products']) ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Product</p>
                 </a>
