@@ -43,7 +43,14 @@
 
             </div>
             <div class="card">
-                <div class="card-header">Products Table</div>
+                <div class="card-header d-flex">
+                    <div class="card-header">Products Table</div>
+                    <div class="ml-auto">
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter">
+                            <i class="fas fa-recycle"></i> Recycle Bin
+                          </button>
+                    </div>
+                </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered">
@@ -100,11 +107,11 @@
                                                         <i class="fas fa-edit"></i> Edit
                                                     </button>
 
-                                                    {{-- @if ($product->pinned == 1)
+                                                    @if ($product->pinned == 1)
                                                         <a href="{{ route('update-pin-status', ['id' => $product->id , 'status' => $product->pinned ]) }}"  class="btn btn-danger btn-sm btn-block"><i class="fas fa-thumbtack"></i> Unpin Product</a>
                                                     @else
                                                         <a href="{{ route('update-pin-status', ['id' => $product->id , 'status' => $product->pinned ]) }}"  class="btn btn-success btn-sm btn-block"><i class="fas fa-thumbtack"></i> Pin Product</a>
-                                                    @endif --}}
+                                                    @endif
 
                                                     <a href="{{ url('product-advantages/'. $product->id) }}"
                                                         class="btn btn-info btn-sm btn-block"> <i class="fas fa-angle-double-right"></i> Stock</a>
@@ -114,7 +121,7 @@
 
                                                     <a href="{{ url('delete-product/'. $product->id) }}"
                                                         id="delete" class="btn btn-danger btn-sm btn-block"><i
-                                                            class="fas fa-trash"></i>Delete</a>
+                                                            class="fas fa-trash"></i> Delete</a>
                                                 </div>
                                             </div>
 
@@ -125,7 +132,7 @@
                             </tbody>
                         </table>
                         <div class="float-right my-2">
-                            {{-- {{ $products->links() }} --}}
+                            {{ $products->links() }}
                         </div>
                     </div>
                 </div>
@@ -240,7 +247,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="editData">
+                <form id="updateData">
                     <input type="hidden" id="id_e" name="id">
                     <div class="modal-body">
 
@@ -250,7 +257,7 @@
                                 placeholder="Enter Product thumbnail"
                                 value="">
 
-                            <span class="text-danger" id="error_thumbnail_e"></span>
+                            <span class="text-danger validate" id="error_thumbnail_e"></span>
                         </div>
                         <div>
                             <img class="d-none" src="" id="previewThumbnail_e" width="200px" alt="">
@@ -258,8 +265,7 @@
 
                         <div class="form-group">
                             <label for="category_id">Category Name</label>
-                            <select class="form-control select2 category_id" name="category_id" id="category_id_e"
-                                style="width: 100%" data-placeholder="Select Category">
+                            <select class="form-control select2 category_id" name="category_id" id="category_id_e" style="width: 100%" data-placeholder="Select Category">
                                 <option value="" selected>Select Category</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -268,23 +274,23 @@
                             <span class="text-danger validate" data-field="category_id"></span>
                         </div>
 
-                        {{-- <div class="form-group">
-                            <label for="sub_category_id_e">Sub Category Name</label>
+                        <div class="form-group">
+                            <label for="sub_category_id">Sub Category Name</label>
                             <select class="form-control select2" name="sub_category_id" id="sub_category_id_e"
                                 style="width: 100%" data-placeholder="Select Subcategory">
                                 <option value="" selected>Select Subcategory</option>
                             </select>
 
+                            <span class="text-danger validate" data-field="sub_category_id"></span>
+                        </div>
 
-                            <span class="text-danger" id="error_subcategory_e"></span>
-                        </div> --}}
                         <div class="form-group">
                             <label for="name_e">Product Name</label>
                             <input type="text" class="form-control" name="name" id="name_e"
                                 placeholder="Enter Product Name" name="name"
-                                value="">
+                                value="" onkeyup="UpdateslugE()">
 
-                            <span class="text-danger" id="error_name_e"></span>
+                            <span class="text-danger validate" id="error_name_e"></span>
                         </div>
 
                         <div class="form-group">
@@ -292,7 +298,7 @@
                             <input type="text" class="form-control" readonly name="slug" id="slug_e"
                                 placeholder="Enter Slug">
 
-                            <span class="text-danger" id="error_slug_e"></span>
+                            <span class="text-danger validate" id="error_slug_e"></span>
                         </div>
 
                         <div class="form-group">
@@ -300,7 +306,7 @@
                             <input type="number" class="form-control" name="selling_price" id="selling_price_e"
                                 placeholder="Enter Selling Price">
 
-                            <span class="text-danger" id="error_selling_price_e"></span>
+                            <span class="text-danger validate" id="error_selling_price_e"></span>
                         </div>
                         <div class="form-group">
                             <label for="active_status_e">Active Status</label>
@@ -311,7 +317,7 @@
                                 <option value="1">Active</option>
                             </select>
 
-                            <span class="text-danger" id="error_active_status_e"></span>
+                            <span class="text-danger validate" id="error_active_status_e"></span>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -322,6 +328,59 @@
             </div>
         </div>
     </div>
+
+    <!-- Recycle Bin -->
+ <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Recycle Bin</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            <a href="{{ route('restore-all-Product') }}" class="btn btn-info mr-1"><i class="fas fa-recycle"></i> Restore All</a>
+            <a href="{{ route('restore-all-Product') }}" class="btn btn-danger"><i class="fas fa-trash"></i> Delete All</a>
+        </div>
+        <div class="modal-body">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Product Thumbnail</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                    @forelse ($trashProducts as $item)
+                        <tr>
+                            <th scope="row">{{ $loop->iteration }}</th>
+                            <td>{{ $item->name }}</td>
+                            <td><img style="height: 50px" src="{{ asset($item->thumbnail) }}" alt=""></td>
+                            <td>
+                                <a href="{{ url('restore-product/'. $item->id) }}" class="btn btn-info btn-sm"><i class="fas fa-recycle"></i>
+                                </a>
+                                <a href="{{ url('restore-product/'. $item->id) }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="10" class="text-center text-danger font-italic font-weight-bold">Empty Recycle Bin</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+              </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 @endsection
@@ -339,6 +398,16 @@
         {
             const productInput = document.getElementById('name');
             const slugOutput = document.getElementById('slug');
+
+            const productName = productInput.value;
+            const slug = createSlug(productName);
+            slugOutput.value = slug;
+        }
+
+        function UpdateslugE()
+        {
+            const productInput = document.getElementById('name_e');
+            const slugOutput = document.getElementById('slug_e');
 
             const productName = productInput.value;
             const slug = createSlug(productName);
@@ -394,22 +463,25 @@
             $('.editData').click(function (e) {
                 e.preventDefault();
                 $('#editmodal').modal('show');
-                $('#category_id_e').val($(this).data('category_id')).trigger('change');
-                // $('#sub_category_id').val($(this).data('sub_category_id')).trigger('change');
+                var category_id = $(this).data('category_id');
+                var subcategory_id = $(this).data('sub_category_id');
+                $('#category_id_e').val(category_id).trigger('change');
+                getSubcategory(category_id, subcategory_id);
 
                 $('#id_e').val($(this).data('id'));
-                $('#categoryName_e').val($(this).data('name'));
+                $('#name_e').val($(this).data('name'));
                 $('#slug_e').val($(this).data('slug'));
+                $('#selling_price_e').val($(this).data('selling_price'));
                 $('#active_status_e').val($(this).data('active_status')).trigger('change');
             });
 
-            // EDIT CATEGORY
+            // EDIT Products
             $("#updateData").submit(function(e) {
                 e.preventDefault();
                 var formdata = new FormData($("#updateData")[0]);
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('edit-category') }}",
+                    url: "{{ route('edit-product') }}",
                     contentType: false,
                     processData: false,
                     headers: {
@@ -445,16 +517,17 @@
             $("#category_id").change(function (e) {
                 e.preventDefault();
                 var category_id = $(this).val();
-                getSubcategory(category_id);
+                getSubcategory(category_id, null);
             });
             $("#category_id_e").change(function (e) {
                 e.preventDefault();
                 var category_id = $(this).val();
-                getSubcategory(category_id);
+                getSubcategory(category_id, null);
             });
 
-            function getSubcategory(category_id) {
-                if (category_id) {
+            function getSubcategory(category_id, subcategory_id) {
+                console.log(category_id, subcategory_id);
+                if (subcategory_id == null || subcategory_id) {
                     $.ajax({
                         type: "GET",
                         url: "{{ route('get-subcategory') }}",
@@ -470,12 +543,14 @@
 
                             if (response.subcategory.length > 0) {
                                 $.each(response.subcategory, function (indexInArray, valueOfElement) {
-                                    options += `<option value="${valueOfElement.id}" ${sub_category_id == valueOfElement.id ? "selected" : ""}>${valueOfElement.name}</option>`;
+                                    options += `<option value="${valueOfElement.id}" ${subcategory_id == valueOfElement.id ? "selected" : ""}>${valueOfElement.name}</option>`;
                                     $('#sub_category_id').html(options);
+                                    $('#sub_category_id_e').html(options);
                                 });
                             } else {
                                 options += '<option selected>No Subcategory Added In This Category</option>';
                                 $('#sub_category_id').html(options);
+                                $('#sub_category_id_e').html(options);
 
                             }
                         }

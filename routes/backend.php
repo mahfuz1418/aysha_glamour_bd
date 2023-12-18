@@ -51,10 +51,13 @@ Route::middleware('auth')->group(function () {
     // Product
     Route::get('/products', [ProductController::class, 'index'])->name('products');
     Route::post('/store-product', [ProductController::class, 'storeProduct'])->name('store-product');
-    Route::get('/edit-product', [ProductController::class, 'editProduct'])->name('edit-product');
-    Route::get('/delete-product', [ProductController::class, 'deleteProduct'])->name('delete-product');
+    Route::post('/edit-product', [ProductController::class, 'editProduct'])->name('edit-product');
+    Route::get('/delete-product/{id}', [ProductController::class, 'deleteProduct'])->name('delete-product');
     Route::get('/restore-product/{id}', [ProductController::class, 'resotoreProduct'])->name('restore-product');
     Route::get('/restore-all-product', [ProductController::class, 'resotoreAllProduct'])->name('restore-all-Product');
+    Route::get('/force-delete-product/{id}', [ProductController::class, 'forceDeleteProduct'])->name('force-delete-product');
+    Route::get('/force-delete-all-product', [ProductController::class, 'forceDeleteAllProduct'])->name('force-delete-all-product');
+    Route::get('/update-pin-status', [ProductController::class, 'updatePinStatus'])->name('update-pin-status');
     // Get Sub Category
     Route::get('/get-subcategory-ajax', [ProductController::class, 'getSubcategoryAjax'])->name('get-subcategory');
 

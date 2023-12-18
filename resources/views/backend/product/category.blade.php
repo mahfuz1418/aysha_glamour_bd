@@ -1,6 +1,6 @@
 @extends('backend.layouts.master')
 
-@section('title', 'Dashboard')
+@section('title', 'Category')
 
 @section('section')
 <div class="content-wrapper" x-data="{category:  null }">
@@ -207,10 +207,7 @@
 </div>
 
 <!-- Recycle Bin -->
-
-
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+ <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -268,7 +265,6 @@
             const slug = categoryName.replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
             return slug.toLowerCase();
         }
-
         function Updateslug()
         {
             const categoryInput = document.getElementById('categoryName');
@@ -278,13 +274,6 @@
             const slug = createSlug(categoryName);
             slugOutput.value = slug;
         }
-
-        function createSlugE(categoryName)
-        {
-            const slug = categoryName.replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-            return slug.toLowerCase();
-        }
-
         function UpdateslugE()
         {
             const categoryInput = document.getElementById('categoryName_e');

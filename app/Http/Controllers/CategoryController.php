@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
+    //VIEW INDEX CATEGORY
     public function index()
     {
         $data['categories'] = Category::paginate(10);
@@ -16,6 +17,7 @@ class CategoryController extends Controller
         return view('backend.product.category', $data);
     }
 
+    //STORE CATEGORY
     public function storeCategory(Request $request)
     {
         $validatorData = Validator::make($request->all(), [
@@ -42,6 +44,7 @@ class CategoryController extends Controller
         }
     }
 
+    //EDIT CATEGORY
     public function editCategory(Request $request)
     {
         $category = Category::findOrFail($request->id_e);
@@ -76,17 +79,21 @@ class CategoryController extends Controller
 
     }
 
+    //DELETE CATEGORY
     public function deleteCategory($cat_id)
     {
         $category = Category::findOrFail($cat_id)->delete();
         return redirect()->back();
     }
 
+    //RESTORE CATEGORY
     public function resotoreCategory($id)
     {
         $restoreCategory = Category::onlyTrashed()->find($id)->restore();
         return back()->with('message', 'Category Restored Successfully');
     }
+    
+    //RESTORE ALL CATEGORY
     public function resotoreAllCategory()
     {
         $restoreCategory = Category::onlyTrashed()->where('deleted_at', '!=' , null)->restore();

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Dashboard</title>
+  <title>@yield('title')</title>
   <!-- CSRF META TAG -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <!-- Google Font: Source Sans Pro -->
@@ -124,46 +124,45 @@
 
 <!-- Sweet Alert -->
 <script>
-    $(document).ready(function () {
-        $("#delete").on('click', function (e) {
-            e.preventDefault();
-            var link = $(this).attr("href");
-            const swalWithBootstrapButtons = Swal.mixin({
+    $(document).on("click", "#delete", function(e) {
+        e.preventDefault();
+        var link = $(this).attr("href");
+        const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
-                confirmButton: "btn btn-success",
-                cancelButton: "btn btn-danger"
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
             },
             buttonsStyling: false
-            });
-            swalWithBootstrapButtons.fire({
-            title: "Are you sure?",
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
             text: "You won't be able to revert this!",
-            icon: "warning",
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "No, cancel!",
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
             reverseButtons: true
-            }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
 
                 window.location.href = link;
-                swalWithBootstrapButtons.fire({
-                title: "Deleted!",
-                text: "Your file has been deleted.",
-                icon: "success"
-                });
+                swalWithBootstrapButtons.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
             } else if (
                 /* Read more about handling dismissals below */
                 result.dismiss === Swal.DismissReason.cancel
             ) {
-                swalWithBootstrapButtons.fire({
-                title: "Cancelled",
-                text: "Your imaginary file is safe :)",
-                icon: "error"
-                });
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Your imaginary file is safe :)',
+                    'error'
+                )
             }
-            });
-        });
+        })
 
     });
 </script>

@@ -12,14 +12,16 @@ use Intervention\Image\Facades\Image;
 
 class ProductController extends Controller
 {
+    //VIEW INDEX
     public function index()
     {
         $data['categories'] = Category::get();
         $data['products'] = Product::paginate(10);
-        // $data['trashCategories'] = Category::onlyTrashed()->get();
+        $data['trashProducts'] = Product::onlyTrashed()->get();
         return view('backend.product.product', $data);
     }
 
+    //STORE PRODUCT
     public function storeProduct(Request $request)
     {
         $request->validate(
@@ -70,14 +72,13 @@ class ProductController extends Controller
         }
     }
 
+    //EDIT PRODUCT
     public function editProduct(Request $request)
     {
         $request->validate(
             [
                 'category_id' => 'required|numeric',
                 'sub_category_id' => 'required|numeric',
-                'name' => 'required|string|max:255',
-                'slug' => "required|string|max:255|unique:products,slug",
                 'selling_price' => 'required|numeric',
                 'active_status' => 'required|in:0,1',
             ],
@@ -93,6 +94,15 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($request->id);
         $image = $product->thumbnail;
+
+        if ($product->name != $request->name) {
+            $request->validate(
+                [
+                    'name' => 'required|string|max:255',
+                    'slug' => "required|string|max:255|unique:products,slug",
+                ]
+            );
+        }
 
         if ($request->file('thumbnail')) {
             $request->validate(
@@ -111,32 +121,125 @@ class ProductController extends Controller
             $image = uploadPlease($request->file('thumbnail'));
         }
 
-        $product->update([
-            'thumbnail' => $image,
-            'category_id' => $request->category_id,
-            'sub_category_id' => $request->sub_category_id,
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'selling_price' => $request->selling_price,
-            'active_status' => $request->active_status,
-            'updated_by' => Auth::id(),
-        ]);
+
+        $product->category_id = $request->category_id;
+        $product->sub_category_id = $request->sub_category_id;
+        $product->name = $request->name;
+        $product->slug = $request->slug;
+        $product->selling_price = $request->selling_price;
+        $product->active_status = $request->active_status;
+        $product->thumbnail = $image;
+        $product->updated_by = Auth::id();
+        $product->save();
 
         if ($product) {
             return response()->json([
-                'success' => true,
+                'success' => "Product Updated successfully",
             ]);
         } else {
             return response()->json([
-                'success' => false,
+                'success' => "Something went wrong",
             ]);
         }
     }
 
+    //DELETE PRODUCT
+    public function deleteProduct($id)
+    {
+        $product = Product::findOrFail($id)->delete();
+        return redirect()->back();
+    }
+
+    //GET SUBCATEGORY VIA AJAX POST
     public function getSubcategoryAjax(Request $request)
     {
         $data['subcategory'] = SubCategory::where('parent_id', $request->category_id)->get();
         return response()->json($data);
     }
+    //  update pin status
+    // public function updatePinStatus($id, $status)
+    // {
+    //     $pin_count = Product::where('pinned', 1)->count();
+
+    //     if ($pin_count >= 6 && $status == 0) {
+    //         $notification = [
+    //             'error' => 'You have reached the maximum product count',
+    //         ];
+    //         return back()->with($notification);
+    //     }
+
+    //     if ($status == 0) {
+    //         $pinn = Product::findOrFail($id)->update([
+    //             'pinned' => '1',
+    //             'updated_by' => Auth::id(),
+    //         ]);
+
+    //         if ($pinn == true) {
+    //             $notification = [
+    //                 'success' => 'Product Pinned Successfully.',
+    //             ];
+    //         } else {
+    //             $notification = [
+    //                 'error' => 'Opps! There Is A Problem!',
+    //             ];
+    //         }
+    //         return back()->with($notification);
+    //     } elseif ($status == 1) {
+    //         $pinn = Product::findOrFail($id)->update([
+    //             'pinned' => '0',
+    //             'updated_by' => Auth::id(),
+    //         ]);
+
+    //         if ($pinn == true) {
+    //             $notification = [
+    //                 'success' => 'Product Unpinned Successfully.',
+    //             ];
+    //         } else {
+    //             $notification = [
+    //                 'error' => 'Opps! There Is A Problem!',
+    //             ];
+    //         }
+    //         return back()->with($notification);
+    //     }
+    // }
+
+     //RESTORE Product
+     public function resotoreProduct($id)
+     {
+         $restoreProduct = Product::onlyTrashed()->find($id)->restore();
+         return back()->with('message', 'Product Restored Successfully');
+     }
+
+     //RESTORE ALL PRODUCT
+     public function resotoreAllProduct()
+     {
+         $restoreAllProduct = Product::onlyTrashed()->where('deleted_at', '!=' , null)->restore();
+         return back()->with('message', 'All Product Restored Successfully');
+     }
+
+     //FORCE DELETE PRODUCT
+    //  public function forceDeleteProduct($id)
+    //  {
+    //     $product = Product::onlyTrashed()->find($id);
+    //     $id = $product->id;
+    //     $image_name = $product->category_image;
+    //     foreach ($subcategories as $subcategory) {
+    //         unlink(base_path('public/upload/subcategory_image/'.$subcategory->subcategory_image));
+    //         $subcategory->forceDelete();
+    //     }
+    //     unlink(base_path('public/upload/category_image/'.$image_name));
+    //     Category::onlyTrashed()->find($id)->forceDelete();
+    //     return back();
+    //  }
+
+    // FORCE DELETE PRODUCT
+     public function forceDeleteAllProduct()
+     {
+         $restoreAllProduct = Product::onlyTrashed()->where('deleted_at', '!=' , null)->restore();
+         return back()->with('message', 'All Product Permanently Deleted');
+     }
+
+
+
 
 }
