@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductDescription;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,7 @@ use Intervention\Image\Facades\Image;
 
 class ProductController extends Controller
 {
+    //------------------------------------------PRODUCT  START-------------------------------------
     //VIEW INDEX
     public function index()
     {
@@ -150,58 +152,52 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
-    //GET SUBCATEGORY VIA AJAX POST
-    public function getSubcategoryAjax(Request $request)
-    {
-        $data['subcategory'] = SubCategory::where('parent_id', $request->category_id)->get();
-        return response()->json($data);
-    }
     //  update pin status
-    // public function updatePinStatus($id, $status)
-    // {
-    //     $pin_count = Product::where('pinned', 1)->count();
+    public function updatePinStatus($id, $status)
+    {
+        $pin_count = Product::where('pinned', 1)->count();
 
-    //     if ($pin_count >= 6 && $status == 0) {
-    //         $notification = [
-    //             'error' => 'You have reached the maximum product count',
-    //         ];
-    //         return back()->with($notification);
-    //     }
+        if ($pin_count >= 6 && $status == 0) {
+            $notification = [
+                'error' => 'You have reached the maximum product count',
+            ];
+            return back()->with($notification);
+        }
 
-    //     if ($status == 0) {
-    //         $pinn = Product::findOrFail($id)->update([
-    //             'pinned' => '1',
-    //             'updated_by' => Auth::id(),
-    //         ]);
+        if ($status == 0) {
+            $pinn = Product::findOrFail($id)->update([
+                'pinned' => '1',
+                'updated_by' => Auth::id(),
+            ]);
 
-    //         if ($pinn == true) {
-    //             $notification = [
-    //                 'success' => 'Product Pinned Successfully.',
-    //             ];
-    //         } else {
-    //             $notification = [
-    //                 'error' => 'Opps! There Is A Problem!',
-    //             ];
-    //         }
-    //         return back()->with($notification);
-    //     } elseif ($status == 1) {
-    //         $pinn = Product::findOrFail($id)->update([
-    //             'pinned' => '0',
-    //             'updated_by' => Auth::id(),
-    //         ]);
+            if ($pinn == true) {
+                $notification = [
+                    'success' => 'Product Pinned Successfully.',
+                ];
+            } else {
+                $notification = [
+                    'error' => 'Opps! There Is A Problem!',
+                ];
+            }
+            return back()->with($notification);
+        } elseif ($status == 1) {
+            $pinn = Product::findOrFail($id)->update([
+                'pinned' => '0',
+                'updated_by' => Auth::id(),
+            ]);
 
-    //         if ($pinn == true) {
-    //             $notification = [
-    //                 'success' => 'Product Unpinned Successfully.',
-    //             ];
-    //         } else {
-    //             $notification = [
-    //                 'error' => 'Opps! There Is A Problem!',
-    //             ];
-    //         }
-    //         return back()->with($notification);
-    //     }
-    // }
+            if ($pinn == true) {
+                $notification = [
+                    'success' => 'Product Unpinned Successfully.',
+                ];
+            } else {
+                $notification = [
+                    'error' => 'Opps! There Is A Problem!',
+                ];
+            }
+            return back()->with($notification);
+        }
+    }
 
      //RESTORE Product
      public function resotoreProduct($id)
@@ -217,29 +213,76 @@ class ProductController extends Controller
          return back()->with('message', 'All Product Restored Successfully');
      }
 
-     //FORCE DELETE PRODUCT
-    //  public function forceDeleteProduct($id)
-    //  {
-    //     $product = Product::onlyTrashed()->find($id);
-    //     $id = $product->id;
-    //     $image_name = $product->category_image;
-    //     foreach ($subcategories as $subcategory) {
-    //         unlink(base_path('public/upload/subcategory_image/'.$subcategory->subcategory_image));
-    //         $subcategory->forceDelete();
-    //     }
-    //     unlink(base_path('public/upload/category_image/'.$image_name));
-    //     Category::onlyTrashed()->find($id)->forceDelete();
-    //     return back();
-    //  }
+    // FORCE DELETE PRODUCT
+     public function forceDeleteProduct($id)
+     {
+
+        $product = Product::onlyTrashed()->find($id);
+        unlink(public_path($product->thumbnail));
+        $product->forceDelete();
+        return back()->with('message', 'Product Deleted Permanently');
+     }
 
     // FORCE DELETE PRODUCT
      public function forceDeleteAllProduct()
      {
-         $restoreAllProduct = Product::onlyTrashed()->where('deleted_at', '!=' , null)->restore();
+         $trushProduct = Product::onlyTrashed()->where('deleted_at', '!=' , null)->get();
+         foreach ($trushProduct as $trash) {
+             unlink(public_path($trash->thumbnail));
+             $trash->forceDelete();
+         }
          return back()->with('message', 'All Product Permanently Deleted');
      }
 
+    //--------------------------------PRODUCT DESCRIPTION START---------------------------------
 
+     public function productDescriptionIndex($id)
+     {
+        $data['product'] = Product::findOrFail($id);
+        $data['productDescriptions'] = ProductDescription::where('product_id', $id)->paginate(10);
+        return view('backend.product.productDescription.product_description', $data);
+     }
+
+     public function storeProductDescription(Request $request)
+     {
+        $request->validate(
+            [
+                'product_id' => 'required|integer',
+                'active_status' => 'required|integer',
+                'content' => 'required|string',
+            ],
+            [
+                'product_id.required' => 'Required',
+                'active_status.required' => 'Active Status Is Required',
+                'content.required' => 'Please Write Or Past The Content',
+            ],
+        );
+
+        $productDes = new ProductDescription();
+        $productDes->product_id = $request->product_id;
+        $productDes->active_status = $request->active_status;
+        $productDes->content = $request->content;
+        $productDes->created_by = Auth::id();
+        $productDes->save();
+
+        if ($productDes) {
+            return response()->json([
+                'success' => 'Product Description Added Successfully',
+            ]);
+        } else {
+            return response()->json([
+                'success' => 'Something Failed',
+            ]);
+        }
+     }
+
+
+    //--------------------------------GET SUBCATEGORY VIA AJAX POST---------------------------------
+    public function getSubcategoryAjax(Request $request)
+    {
+        $data['subcategory'] = SubCategory::where('parent_id', $request->category_id)->get();
+        return response()->json($data);
+    }
 
 
 }

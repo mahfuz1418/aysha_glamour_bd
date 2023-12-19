@@ -57,9 +57,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/restore-all-product', [ProductController::class, 'resotoreAllProduct'])->name('restore-all-Product');
     Route::get('/force-delete-product/{id}', [ProductController::class, 'forceDeleteProduct'])->name('force-delete-product');
     Route::get('/force-delete-all-product', [ProductController::class, 'forceDeleteAllProduct'])->name('force-delete-all-product');
-    Route::get('/update-pin-status', [ProductController::class, 'updatePinStatus'])->name('update-pin-status');
+    Route::get('/update-pin-status/{id}/{status}', [ProductController::class, 'updatePinStatus'])->name('update-pin-status');
     // Get Sub Category
     Route::get('/get-subcategory-ajax', [ProductController::class, 'getSubcategoryAjax'])->name('get-subcategory');
+    // Product Description
+    Route::get('/product-description/{id}', [ProductController::class, 'productDescriptionIndex'])->name('product-description');
+    Route::post('/store-product-description', [ProductController::class, 'storeProductDescription'])->name('store-product-description');
+
 
 
 

@@ -72,7 +72,8 @@
                                 @php
                                     $serials = ($products->currentpage() - 1) * $products->perpage() + 1;
                                 @endphp
-                                @foreach($products as $product)
+
+                                  @forelse($products as $product)
                                     <tr>
                                         <th scope="row">{{ $serials++ }}</th>
                                         <td>
@@ -128,7 +129,11 @@
 
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="10" class="text-center text-danger font-italic font-weight-bold">Empty Product</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                         <div class="float-right my-2">
@@ -341,7 +346,7 @@
         </div>
         <div class="d-flex justify-content-center mt-3">
             <a href="{{ route('restore-all-Product') }}" class="btn btn-info mr-1"><i class="fas fa-recycle"></i> Restore All</a>
-            <a href="{{ route('restore-all-Product') }}" class="btn btn-danger"><i class="fas fa-trash"></i> Delete All</a>
+            <a href="{{ route('force-delete-all-product') }}" class="btn btn-danger"><i class="fas fa-trash"></i> Delete All</a>
         </div>
         <div class="modal-body">
             <table class="table">
@@ -363,7 +368,7 @@
                             <td>
                                 <a href="{{ url('restore-product/'. $item->id) }}" class="btn btn-info btn-sm"><i class="fas fa-recycle"></i>
                                 </a>
-                                <a href="{{ url('restore-product/'. $item->id) }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
+                                <a href="{{ url('force-delete-product/'. $item->id) }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
                                 </a>
                             </td>
                         </tr>
@@ -559,5 +564,11 @@
             }
         });
     </script>
+
+    @if (Session::has('message'))
+    <script>
+        toastr.success("{{ Session::get('message') }}");
+    </script>
+    @endif
 
 @endsection
