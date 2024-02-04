@@ -58,13 +58,14 @@
                                 <tr>
                                     <th scope="col" style="width: 5%">Serial</th>
                                     <th scope="col" style="width: 10%">Thumbnail</th>
+                                    <th scope="col" style="width: 10%">Hover Image</th>
                                     <th scope="col" style="width: 10%">Product Name</th>
                                     <th scope="col" style="width: 10%">Category Name</th>
                                     <th scope="col" style="width: 10%">Subcategory Name</th>
                                     <th scope="col" style="width: 10%">Slug</th>
                                     <th scope="col" style="width: 10%">Selling Price</th>
                                     <th scope="col" style="width: 10%">Active Status</th>
-                                    <th scope="col" style="width: 10%">Pin Status</th>
+                                    <th scope="col" style="width: 5%">Pin Status</th>
                                     <th scope="col" style="width: 10%">Action</th>
                                 </tr>
                             </thead>
@@ -77,7 +78,10 @@
                                     <tr>
                                         <th scope="row">{{ $serials++ }}</th>
                                         <td>
-                                            <img width="100px" src="{{ asset($product->thumbnail) }}" alt="" srcset="">
+                                            <img width="80px" src="{{ asset($product->thumbnail) }}" alt="" srcset="">
+                                        </td>
+                                        <td>
+                                            <img width="80px" src="{{ asset($product->hover_image) }}" alt="" srcset="">
                                         </td>
                                         <td>{{ $product->name }}</td>
                                         <td>{{ $product->category->name }}</td>
@@ -160,16 +164,27 @@
                 </div>
                 <form id="formData">
                     <div class="modal-body">
-
-                        <div class="form-group">
-                            <label for="thumbnail">Product Thumbnail</label>
-                            <input type="file" class="form-control" name="thumbnail" id="thumbnail"
-                                placeholder="Enter Product thumbnail"
-                                value="">
-                            <span class="text-danger validate" data-field="thumbnail"></span>
-                        </div>
-                        <div>
-                            <img class="d-none" src="" id="previewThumbnail" width="200px" alt="">
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="thumbnail">Product Image <small class="text-danger">(Please Upload 400px hight photo)</small></label>
+                                    <input type="file" class="form-control" name="thumbnail" id="thumbnail">
+                                    <span class="text-danger validate" data-field="thumbnail"></span>
+                                </div>
+                                <div>
+                                    <img class="d-none" src="" id="previewThumbnail" width="180px" alt="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="hover_image">Product Hover Image <small class="text-danger">(Please Upload 400px hight photo)</small></label>
+                                    <input type="file" class="form-control" name="hover_image" id="hover_image">
+                                    <span class="text-danger validate" data-field="hover_image"></span>
+                                </div>
+                                <div>
+                                    <img class="d-none" src="" id="hoverImage" width="180px" alt="">
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="category_id">Category Name</label>
@@ -425,6 +440,11 @@
             //SHOW IMAGE WHEN UPLOAD
             $("#thumbnail").change(function() {
                 pleasePreview(this, 'previewThumbnail');
+            });
+
+            //SHOW IMAGE WHEN hover image
+            $("#hover_image").change(function() {
+                pleasePreview(this, 'hoverImage');
             });
 
             // STORE PRODUCT

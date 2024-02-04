@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('category_id');
             $table->foreignId('sub_category_id');
             $table->string('thumbnail');
+            $table->string('hover_image');
             $table->boolean('pinned')->default(0);
             $table->decimal('selling_price', 10,2);
             $table->boolean('active_status')->default(1);

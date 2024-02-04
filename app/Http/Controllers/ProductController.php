@@ -29,6 +29,7 @@ class ProductController extends Controller
         $request->validate(
             [
                 'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                'hover_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
                 'category_id' => 'required|numeric',
                 'sub_category_id' => 'required|numeric',
                 'name' => 'required|string|max:255',
@@ -38,6 +39,7 @@ class ProductController extends Controller
             ],
             [
                 'thumbnail.required' => 'Please Choose a Thumbnail',
+                'hover_image.required' => 'Please Choose a Hover Image',
                 'category_id.required' => 'Product Category Is Required',
                 'sub_category_id.required' => 'Product Subcategory Is Required',
                 'name.required' => 'Product Name Is Required',
@@ -51,6 +53,10 @@ class ProductController extends Controller
         if ($request->file('thumbnail')) {
             $image = uploadPlease($request->file('thumbnail'));
         }
+        $image1 = '';
+        if ($request->file('hover_image')) {
+            $image1 = uploadPlease($request->file('hover_image'));
+        }
 
         $product = new Product();
         $product->category_id = $request->category_id;
@@ -60,6 +66,7 @@ class ProductController extends Controller
         $product->selling_price = $request->selling_price;
         $product->active_status = $request->active_status;
         $product->thumbnail = $image;
+        $product->hover_image = $image1;
         $product->created_by = Auth::id();
         $product->save();
 
