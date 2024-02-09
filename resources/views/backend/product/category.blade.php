@@ -235,8 +235,7 @@
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $tc->name }}</td>
                             <td>
-                                <a href="{{ url('restore-category/'. $tc->id) }}"
-                                    id="delete" class="btn btn-info btn-sm"><i class="fas fa-recycle"></i>
+                                <a href="{{ url('restore-category/'. $tc->id) }}" class="btn btn-info btn-sm"><i class="fas fa-recycle"></i>
                                 </a>
                             </td>
                         </tr>

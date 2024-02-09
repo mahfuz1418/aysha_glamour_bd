@@ -60,7 +60,7 @@
                                     <div id="{{ $category->slug }}" class="tab_content grid-products">
                                         {{-- find product categorywiese --}}
                                         @php
-                                            $products = App\Models\Product::where('category_id', $category->id)->latest()->take(5)->get()
+                                            $products = App\Models\Product::where('category_name', $category->name)->where('active_status', 1)->latest()->take(5)->get()
                                         @endphp
                                         <div class="productSlider">
                                             @foreach ($products as $product)
@@ -70,7 +70,7 @@
                                                         <!-- start product image -->
                                                         <a href="short-description.html">
                                                             <!-- image -->
-                                                            <img class="primary blur-up lazyload" style="height: 400px; background-size:fit" src="{{ asset($product->thumbnail) }}" alt="image" title="product">
+                                                            <img class="primary blur-up lazyload" style="height: 350px; background-size:fit" src="{{ asset($product->thumbnail) }}" alt="image" title="product">
                                                             <!-- End image -->
                                                             <!-- Hover image -->
                                                             <img class="hover blur-up lazyload" src="{{ asset($product->hover_image ) }}" alt="image" title="product">
@@ -125,54 +125,16 @@
         <div class="collection-box section">
         	<div class="container-fluid">
 				<div class="collection-grid">
+                    @foreach ($sub_categories as $subCat)
                         <div class="collection-grid-item">
                             <a href="collection-page.html" class="collection-grid-item__link">
-                                <img data-src="{{ asset('frontend') }}/assets/images/collection/fashion.jpg" src="{{ asset('frontend') }}/assets/images/collection/fashion.jpg" alt="Fashion" class="blur-up lazyload"/>
+                                <img style="height: 280px" src="{{ asset($subCat->subcategory_image) }}" alt="Fashion" class="blur-up lazyload"/>
                                 <div class="collection-grid-item__title-wrapper">
-                                    <h3 class="collection-grid-item__title btn btn--secondary no-border">Fashion</h3>
+                                    <h3 class="collection-grid-item__title btn btn--secondary no-border">{{ $subCat->name }}</h3>
                                 </div>
                             </a>
                         </div>
-                        <div class="collection-grid-item">
-                            <a href="collection-page.html" class="collection-grid-item__link">
-                                <img class="blur-up lazyload" data-src="{{ asset('frontend') }}/assets/images/collection/cosmetic.jpg" src="{{ asset('frontend') }}/assets/images/collection/cosmetic.jpg" alt="Cosmetic"/>
-                                <div class="collection-grid-item__title-wrapper">
-                                    <h3 class="collection-grid-item__title btn btn--secondary no-border">Cosmetic</h3>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="collection-grid-item blur-up lazyloaded">
-                            <a href="collection-page.html" class="collection-grid-item__link">
-                                <img data-src="{{ asset('frontend') }}/assets/images/collection/bag.jpg" src="{{ asset('frontend') }}/assets/images/collection/bag.jpg" alt="Bag" class="blur-up lazyload"/>
-                                <div class="collection-grid-item__title-wrapper">
-                                    <h3 class="collection-grid-item__title btn btn--secondary no-border">Bag</h3>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="collection-grid-item">
-                            <a href="collection-page.html" class="collection-grid-item__link">
-                                <img data-src="{{ asset('frontend') }}/assets/images/collection/accessories.jpg" src="{{ asset('frontend') }}/assets/images/collection/accessories.jpg" alt="Accessories" class="blur-up lazyload"/>
-                                <div class="collection-grid-item__title-wrapper">
-                                    <h3 class="collection-grid-item__title btn btn--secondary no-border">Accessories</h3>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="collection-grid-item">
-                            <a href="collection-page.html" class="collection-grid-item__link">
-                                <img data-src="{{ asset('frontend') }}/assets/images/collection/shoes.jpg" src="{{ asset('frontend') }}/assets/images/collection/shoes.jpg" alt="Shoes" class="blur-up lazyload"/>
-                                <div class="collection-grid-item__title-wrapper">
-                                    <h3 class="collection-grid-item__title btn btn--secondary no-border">Shoes</h3>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="collection-grid-item">
-                            <a href="collection-page.html" class="collection-grid-item__link">
-                                <img data-src="{{ asset('frontend') }}/assets/images/collection/jewellry.jpg" src="{{ asset('frontend') }}/assets/images/collection/jewellry.jpg" alt="Jewellry" class="blur-up lazyload"/>
-                                <div class="collection-grid-item__title-wrapper">
-                                    <h3 class="collection-grid-item__title btn btn--secondary no-border">Jewellry</h3>
-                                </div>
-                            </a>
-                        </div>
+                    @endforeach
                     </div>
             </div>
         </div>
@@ -222,356 +184,62 @@
                 </div>
                 <div class="grid-products">
 	                <div class="row">
-                        <div class="col-6 col-sm-6 col-md-4 col-lg-4 item grid-view-item style2">
-                        	<div class="grid-view_image">
-                                <!-- start product image -->
-                                <a href="product-accordion.html" class="grid-view-item__link">
-                                    <!-- image -->
-                                    <img class="grid-view-item__image primary blur-up lazyload" data-src="{{ asset('frontend') }}/assets/images/product-images/product-image1.jpg" src="{{ asset('frontend') }}/assets/images/product-images/product-image1.jpg" alt="image" title="product">
-                                    <!-- End image -->
-                                    <!-- Hover image -->
-                                    <img class="grid-view-item__image hover blur-up lazyload" data-src="{{ asset('frontend') }}/assets/images/product-images/product-image1-1.jpg" src="{{ asset('frontend') }}/assets/images/product-images/product-image1-1.jpg" alt="image" title="product">
-                                    <!-- End hover image -->
-                                    <!-- product label -->
-                                    <div class="product-labels rectangular"><span class="lbl on-sale">-16%</span> <span class="lbl pr-label1">new</span></div>
-                                    <!-- End product label -->
-                                </a>
-                                <!-- end product image -->
-                                <!--start product details -->
-                                <div class="product-details hoverDetails text-center mobile">
-                                    <!-- product name -->
-                                    <div class="product-name">
-                                        <a href="product-accordion.html">Edna Dress</a>
-                                    </div>
-                                    <!-- End product name -->
-                                    <!-- product price -->
-                                    <div class="product-price">
-                                        <span class="old-price">$500.00</span>
-                                        <span class="price">$600.00</span>
-                                    </div>
-                                    <!-- End product price -->
+                        @foreach ($feature_products as $feature)
+                            <div class="col-6 col-sm-6 col-md-4 col-lg-4 item grid-view-item style2">
+                                <div class="grid-view_image">
+                                    <!-- start product image -->
+                                    <a href="product-accordion.html" class="grid-view-item__link">
+                                        <!-- image -->
+                                        <img class="grid-view-item__image primary blur-up lazyload" src="{{ asset($feature->thumbnail) }}" style="height: 480px" alt="image" title="product">
+                                        <!-- End image -->
+                                        <!-- Hover image -->
+                                        <img class="grid-view-item__image hover blur-up lazyload" src="{{ asset($feature->hover_image) }}" alt="image" title="product">
+                                        <!-- End hover image -->
+                                        <!-- product label -->
+                                        <div class="product-labels rectangular"> <span class="lbl pr-label1">new</span></div>
+                                        <!-- End product label -->
+                                    </a>
+                                    <!-- end product image -->
+                                    <!--start product details -->
+                                    <div class="product-details hoverDetails text-center mobile">
+                                        <!-- product name -->
+                                        <div class="product-name">
+                                            <a href="product-accordion.html">Edna Dress</a>
+                                        </div>
+                                        <!-- End product name -->
+                                        <!-- product price -->
+                                        <div class="product-price">
+                                            <span class="price">$600.00</span>
+                                        </div>
+                                        <!-- End product price -->
 
-                                    <!-- product button -->
-                                    <div class="button-set">
-                                        <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
-                                            <i class="icon anm anm-search-plus-r"></i>
-                                        </a>
-                                        <!-- Start product button -->
-                                        <form class="variants add" action="#" onclick="window.location.href='cart.html'"method="post">
-                                            <button class="btn cartIcon btn-addto-cart" type="button" tabindex="0"><i class="icon anm anm-bag-l"></i></button>
-                                        </form>
-                                        <div class="wishlist-btn">
-                                            <a class="wishlist add-to-wishlist" href="wishlist.html">
-                                                <i class="icon anm anm-heart-l"></i>
+                                        <!-- product button -->
+                                        <div class="button-set">
+                                            <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
+                                                <i class="icon anm anm-search-plus-r"></i>
                                             </a>
+                                            <!-- Start product button -->
+                                            <form class="variants add" action="#" onclick="window.location.href='cart.html'"method="post">
+                                                <button class="btn cartIcon btn-addto-cart" type="button" tabindex="0"><i class="icon anm anm-bag-l"></i></button>
+                                            </form>
+                                            <div class="wishlist-btn">
+                                                <a class="wishlist add-to-wishlist" href="wishlist.html">
+                                                    <i class="icon anm anm-heart-l"></i>
+                                                </a>
+                                            </div>
+                                            <div class="compare-btn">
+                                                <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
+                                                    <i class="icon anm anm-random-r"></i>
+                                                </a>
+                                            </div>
                                         </div>
-                                        <div class="compare-btn">
-                                            <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
-                                                <i class="icon anm anm-random-r"></i>
-                                            </a>
-                                        </div>
+                                        <!-- end product button -->
                                     </div>
-                                    <!-- end product button -->
+
+                                    <!-- End product details -->
                                 </div>
-                                <!-- Variant -->
-                                <ul class="swatches text-center">
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant1.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant2.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant3.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant4.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant5.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant6.jpg" alt="image" /></li>
-                                </ul>
-                                <!-- End Variant -->
-                                <!-- End product details -->
                             </div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-lg-4 item grid-view-item style2">
-                        	<div class="grid-view_image">
-                                <!-- start product image -->
-                                <a href="product-accordion.html" class="grid-view-item__link">
-                                    <!-- image -->
-                                    <img class="grid-view-item__image primary blur-up lazyload" data-src="{{ asset('frontend') }}/assets/images/product-images/product-image2.jpg" src="{{ asset('frontend') }}/assets/images/product-images/product-image2.jpg" alt="image" title="product">
-                                    <!-- End image -->
-                                    <!-- Hover image -->
-                                    <img class="grid-view-item__image hover blur-up lazyload" data-src="{{ asset('frontend') }}/assets/images/product-images/product-image2-1.jpg" src="{{ asset('frontend') }}/assets/images/product-images/product-image2-1.jpg" alt="image" title="product">
-                                    <!-- End hover image -->
-                                    <!-- product label -->
-                                    <div class="product-labels rectangular"><span class="lbl on-sale">-16%</span> <span class="lbl pr-label1">new</span></div>
-                                    <!-- End product label -->
-                                </a>
-                                <!-- end product image -->
-                                <!--start product details -->
-                                <div class="product-details hoverDetails text-center mobile">
-                                    <!-- product name -->
-                                    <div class="product-name">
-                                        <a href="product-accordion.html">Elastic Waist Dress</a>
-                                    </div>
-                                    <!-- End product name -->
-                                    <!-- product price -->
-                                    <div class="product-price">
-                                        <span class="price">$748.00</span>
-                                    </div>
-                                    <!-- product button -->
-                                    <div class="button-set">
-                                        <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
-                                            <i class="icon anm anm-search-plus-r"></i>
-                                        </a>
-                                        <!-- Start product button -->
-                                        <form class="variants add" action="#" onclick="window.location.href='cart.html'"method="post">
-                                            <button class="btn cartIcon btn-addto-cart" type="button" tabindex="0"><i class="icon anm anm-bag-l"></i></button>
-                                        </form>
-                                        <div class="wishlist-btn">
-                                            <a class="wishlist add-to-wishlist" href="wishlist.html">
-                                                <i class="icon anm anm-heart-l"></i>
-                                            </a>
-                                        </div>
-                                        <div class="compare-btn">
-                                            <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
-                                                <i class="icon anm anm-random-r"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <!-- end product button -->
-                                </div>
-                                <!-- Variant -->
-                                <ul class="swatches text-center">
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant2-1.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant2-2.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant2-3.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant2-4.jpg" alt="image" /></li>
-                                </ul>
-                                <!-- End Variant -->
-                                <!-- End product details -->
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-lg-4 item grid-view-item style2">
-                        	<div class="grid-view_image">
-                                <!-- start product image -->
-                                <a href="product-accordion.html" class="grid-view-item__link">
-                                    <!-- image -->
-                                    <img class="grid-view-item__image primary blur-up lazyload" data-src="{{ asset('frontend') }}/assets/images/product-images/product-image3.jpg" src="{{ asset('frontend') }}/assets/images/product-images/product-image3.jpg" alt="image" title="product">
-                                    <!-- End image -->
-                                    <!-- Hover image -->
-                                    <img class="grid-view-item__image hover blur-up lazyload" data-src="{{ asset('frontend') }}/assets/images/product-images/product-image3-1.jpg" src="{{ asset('frontend') }}/assets/images/product-images/product-image3-1.jpg" alt="image" title="product">
-                                    <!-- End hover image -->
-                                    <!-- product label -->
-                                    <div class="product-labels rectangular"><span class="lbl on-sale">-16%</span> <span class="lbl pr-label1">new</span></div>
-                                    <!-- End product label -->
-                                </a>
-                                <!-- end product image -->
-                                <!--start product details -->
-                                <div class="product-details hoverDetails text-center mobile">
-                                    <!-- product name -->
-                                    <div class="product-name">
-                                        <a href="product-accordion.html">3/4 Sleeve Kimono Dress</a>
-                                    </div>
-                                    <!-- End product name -->
-                                    <!-- product price -->
-                                    <div class="product-price">
-                                        <span class="price">$550.00</span>
-                                    </div>
-                                    <!-- product button -->
-                                    <div class="button-set">
-                                        <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
-                                            <i class="icon anm anm-search-plus-r"></i>
-                                        </a>
-                                        <!-- Start product button -->
-                                        <form class="variants add" action="#" onclick="window.location.href='cart.html'"method="post">
-                                            <button class="btn cartIcon btn-addto-cart" type="button" tabindex="0"><i class="icon anm anm-bag-l"></i></button>
-                                        </form>
-                                        <div class="wishlist-btn">
-                                            <a class="wishlist add-to-wishlist" href="wishlist.html">
-                                                <i class="icon anm anm-heart-l"></i>
-                                            </a>
-                                        </div>
-                                        <div class="compare-btn">
-                                            <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
-                                                <i class="icon anm anm-random-r"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <!-- end product button -->
-                                </div>
-                                <!-- Variant -->
-                                <ul class="swatches text-center">
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant3-1.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant3-2.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant3-3.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant3-4.jpg" alt="image" /></li>
-                                </ul>
-                                <!-- End Variant -->
-                                <!-- End product details -->
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-lg-4 item grid-view-item style2">
-                        	<div class="grid-view_image">
-                                <!-- start product image -->
-                                <a href="product-accordion.html" class="grid-view-item__link">
-                                    <!-- image -->
-                                    <img class="grid-view-item__image primary blur-up lazyload" data-src="{{ asset('frontend') }}/assets/images/product-images/product-image4.jpg" src="{{ asset('frontend') }}/assets/images/product-images/product-image4.jpg" alt="image" title="product">
-                                    <!-- End image -->
-                                    <!-- Hover image -->
-                                    <img class="grid-view-item__image hover blur-up lazyload" data-src="{{ asset('frontend') }}/assets/images/product-images/product-image4-1.jpg" src="{{ asset('frontend') }}/assets/images/product-images/product-image4-1.jpg" alt="image" title="product">
-                                    <!-- End hover image -->
-                                    <!-- product label -->
-                                    <div class="product-labels"><span class="lbl on-sale">Sale</span></div>
-                                    <!-- End product label -->
-                                </a>
-                                <!-- end product image -->
-                                <!--start product details -->
-                                <div class="product-details hoverDetails text-center mobile">
-                                    <!-- product name -->
-                                    <div class="product-name">
-                                        <a href="product-accordion.html">Cape Dress</a>
-                                    </div>
-                                    <!-- End product name -->
-                                    <!-- product price -->
-                                    <div class="product-price">
-                                        <span class="old-price">$900.00</span>
-                                        <span class="price">$788.00</span>
-                                    </div>
-                                    <!-- product button -->
-                                    <div class="button-set">
-                                        <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
-                                            <i class="icon anm anm-search-plus-r"></i>
-                                        </a>
-                                        <!-- Start product button -->
-                                        <form class="variants add" action="#" onclick="window.location.href='cart.html'"method="post">
-                                            <button class="btn cartIcon btn-addto-cart" type="button" tabindex="0"><i class="icon anm anm-bag-l"></i></button>
-                                        </form>
-                                        <div class="wishlist-btn">
-                                            <a class="wishlist add-to-wishlist" href="wishlist.html">
-                                                <i class="icon anm anm-heart-l"></i>
-                                            </a>
-                                        </div>
-                                        <div class="compare-btn">
-                                            <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
-                                                <i class="icon anm anm-random-r"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <!-- end product button -->
-                                </div>
-                                <!-- Variant -->
-                                <ul class="swatches text-center">
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant4-1.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant4-2.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant4-3.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant4-4.jpg" alt="image" /></li>
-                                </ul>
-                                <!-- End Variant -->
-                                <!-- End product details -->
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-lg-4 item grid-view-item style2">
-                        	<div class="grid-view_image">
-                                <!-- start product image -->
-                                <a href="product-accordion.html" class="grid-view-item__link">
-                                    <!-- image -->
-                                    <img class="grid-view-item__image primary blur-up lazyload" data-src="{{ asset('frontend') }}/assets/images/product-images/product-image5.jpg" src="{{ asset('frontend') }}/assets/images/product-images/product-image5.jpg" alt="image" title="product">
-                                    <!-- End image -->
-                                    <!-- Hover image -->
-                                    <img class="grid-view-item__image hover blur-up lazyload" data-src="{{ asset('frontend') }}/assets/images/product-images/product-image5-1.jpg" src="{{ asset('frontend') }}/assets/images/product-images/product-image5-1.jpg" alt="image" title="product">
-                                    <!-- End hover image -->
-                                    <!-- product label -->
-                                    <div class="product-labels"><span class="lbl on-sale">Sale</span></div>
-                                    <!-- End product label -->
-                                </a>
-                                <!-- end product image -->
-                                <!--start product details -->
-                                <div class="product-details hoverDetails text-center mobile">
-                                    <!-- product name -->
-                                    <div class="product-name">
-                                        <a href="product-accordion.html">Paper Dress</a>
-                                    </div>
-                                    <!-- End product name -->
-                                    <!-- product price -->
-                                    <div class="product-price">
-                                        <span class="old-price">$900.00</span>
-                                        <span class="price">$788.00</span>
-                                    </div>
-                                    <!-- product button -->
-                                    <div class="button-set">
-                                        <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
-                                            <i class="icon anm anm-search-plus-r"></i>
-                                        </a>
-                                        <!-- Start product button -->
-                                        <form class="variants add" action="#" onclick="window.location.href='cart.html'"method="post">
-                                            <button class="btn cartIcon btn-addto-cart" type="button" tabindex="0"><i class="icon anm anm-bag-l"></i></button>
-                                        </form>
-                                        <div class="wishlist-btn">
-                                            <a class="wishlist add-to-wishlist" href="wishlist.html">
-                                                <i class="icon anm anm-heart-l"></i>
-                                            </a>
-                                        </div>
-                                        <div class="compare-btn">
-                                            <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
-                                                <i class="icon anm anm-random-r"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <!-- end product button -->
-                                </div>
-                                <!-- Variant -->
-                                <ul class="swatches text-center">
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant3-1.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant3-2.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant3-3.jpg" alt="image" /></li>
-                                    <li class="swatch medium rounded"><img src="{{ asset('frontend') }}/assets/images/product-images/variant3-4.jpg" alt="image" /></li>
-                                </ul>
-                                                <!-- End Variant -->
-                                <!-- End product details -->
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-lg-4 item grid-view-item style2">
-                        	<div class="grid-view_image">
-                                <!-- start product image -->
-                                <a href="product-accordion.html" class="grid-view-item__link">
-                                    <!-- image -->
-                                    <img class="grid-view-item__image primary blur-up lazyload" data-src="{{ asset('frontend') }}/assets/images/product-images/product-image16.jpg" src="{{ asset('frontend') }}/assets/images/product-images/product-image16.jpg" alt="image" title="product">
-                                    <!-- End image -->
-                                    <!-- Hover image -->
-                                    <img class="grid-view-item__image hover blur-up lazyload" data-src="{{ asset('frontend') }}/assets/images/product-images/product-image16-1.jpg" src="{{ asset('frontend') }}/assets/images/product-images/product-image16-1.jpg" alt="image" title="product">
-                                    <!-- End hover image -->
-                                </a>
-                                <!-- end product image -->
-                                <!--start product details -->
-                                <div class="product-details hoverDetails text-center mobile">
-                                    <!-- product name -->
-                                    <div class="product-name">
-                                        <a href="product-accordion.html">Buttercup Dress</a>
-                                    </div>
-                                    <!-- End product name -->
-                                    <!-- product price -->
-                                    <div class="product-price">
-                                        <span class="price">$420.00</span>
-                                    </div>
-                                    <!-- product button -->
-                                    <div class="button-set">
-                                        <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
-                                            <i class="icon anm anm-search-plus-r"></i>
-                                        </a>
-                                        <!-- Start product button -->
-                                        <form class="variants add" action="#" onclick="window.location.href='cart.html'"method="post">
-                                            <button class="btn cartIcon btn-addto-cart" type="button" tabindex="0"><i class="icon anm anm-bag-l"></i></button>
-                                        </form>
-                                        <div class="wishlist-btn">
-                                            <a class="wishlist add-to-wishlist" href="wishlist.html">
-                                                <i class="icon anm anm-heart-l"></i>
-                                            </a>
-                                        </div>
-                                        <div class="compare-btn">
-                                            <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
-                                                <i class="icon anm anm-random-r"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <!-- end product button -->
-                                </div>
-                                <!-- End product details -->
-                            </div>
-                        </div>
+                        @endforeach
                 	</div>
                 </div>
            </div>

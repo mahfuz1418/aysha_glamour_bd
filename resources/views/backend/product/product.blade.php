@@ -56,14 +56,15 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th scope="col" style="width: 5%">Serial</th>
+                                    <th scope="col" style="width: 5%">#</th>
                                     <th scope="col" style="width: 10%">Thumbnail</th>
                                     <th scope="col" style="width: 10%">Hover Image</th>
                                     <th scope="col" style="width: 10%">Product Name</th>
-                                    <th scope="col" style="width: 10%">Category Name</th>
-                                    <th scope="col" style="width: 10%">Subcategory Name</th>
+                                    <th scope="col" style="width: 10%">Category</th>
+                                    <th scope="col" style="width: 10%">Subcategory</th>
                                     <th scope="col" style="width: 10%">Slug</th>
-                                    <th scope="col" style="width: 10%">Selling Price</th>
+                                    <th scope="col" style="width: 5%">Price</th>
+                                    <th scope="col" style="width: 5%">Stock</th>
                                     <th scope="col" style="width: 10%">Active Status</th>
                                     <th scope="col" style="width: 5%">Pin Status</th>
                                     <th scope="col" style="width: 10%">Action</th>
@@ -84,10 +85,11 @@
                                             <img width="80px" src="{{ asset($product->hover_image) }}" alt="" srcset="">
                                         </td>
                                         <td>{{ $product->name }}</td>
-                                        <td>{{ $product->category->name }}</td>
-                                        <td>{{ $product->subcategory->name }}</td>
+                                        <td>{{ $product->category_name }}</td>
+                                        <td>{{ $product->sub_category_name }}</td>
                                         <td>{{ $product->slug }}</td>
                                         <td>{{ $product->selling_price }} $</td>
+                                        <td>{{ $product->stock }}</td>
                                         <td><span class="badge badge-{{ $product->active_status == 0 ? 'danger': 'success' }}">{{ $product->active_status == 0 ? 'Inactive': 'Active' }}</span>
                                         </td>
                                         <td>
@@ -104,6 +106,7 @@
                                                     <button type="button" data-id="{{ $product->id }}"
                                                         data-name="{{ $product->name }}"
                                                         data-category_id="{{ $product->category_id }}"
+                                                        data-stock="{{ $product->stock }}"
                                                         data-sub_category_id="{{ $product->sub_category_id }}"
                                                         data-slug="{{ $product->slug }}"
                                                         data-selling_price="{{ $product->selling_price }}"
@@ -117,10 +120,6 @@
                                                     @else
                                                         <a href="{{ route('update-pin-status', ['id' => $product->id , 'status' => $product->pinned ]) }}"  class="btn btn-success btn-sm btn-block"><i class="fas fa-thumbtack"></i> Pin Product</a>
                                                     @endif
-
-                                                    <a href="{{ url('product-advantages/'. $product->id) }}"
-                                                        class="btn btn-info btn-sm btn-block"> <i class="fas fa-angle-double-right"></i> Stock</a>
-
                                                     <a href="{{ url('product-description/'. $product->id) }}"
                                                         class="btn btn-info btn-sm btn-block"> <i class="fas fa-angle-double-right"></i> Description</a>
 
@@ -186,65 +185,93 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="category_id">Category Name</label>
-                            <select class="form-control select2 category_id" name="category_id" id="category_id"
-                                style="width: 100%" data-placeholder="Select Category">
-                                <option value="" selected>Select Category</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                            <span class="text-danger validate" data-field="category_id"></span>
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="category_id">Category Name</label>
+                                    <select class="form-control select2 category_id" name="category_id" id="category_id"
+                                        style="width: 100%" data-placeholder="Select Category">
+                                        <option value="" selected>Select Category</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger validate" data-field="category_id"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="sub_category_id">Sub Category Name</label>
+                                    <select class="form-control select2" name="sub_category_id" id="sub_category_id"
+                                        style="width: 100%" data-placeholder="Select Subcategory">
+                                        <option value="" selected>Select Subcategory</option>
+                                    </select>
+
+
+                                    <span class="text-danger validate" data-field="sub_category_id"></span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="sub_category_id">Sub Category Name</label>
-                            <select class="form-control select2" name="sub_category_id" id="sub_category_id"
-                                style="width: 100%" data-placeholder="Select Subcategory">
-                                <option value="" selected>Select Subcategory</option>
-                            </select>
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="name">Product Name</label>
+                                    <input type="text" class="form-control" name="name" id="name"
+                                        placeholder="Enter Product Name"
+                                        value="" onkeyup="Updateslug()">
 
+                                    <span class="text-danger validate" data-field="name"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="slug">Slug</label>
+                                    <input type="text" class="form-control" readonly name="slug" id="slug"
+                                        placeholder="Enter Slug">
 
-                            <span class="text-danger validate" data-field="sub_category_id"></span>
+                                    <span class="text-danger validate" data-field="slug"></span>
+                                </div>
+                            </div>
                         </div>
 
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="selling_price">Selling Price</label>
+                                    <input type="number" class="form-control" name="selling_price" id="selling_price"
+                                        placeholder="Enter Selling Price">
 
-                        <div class="form-group">
-                            <label for="name">Product Name</label>
-                            <input type="text" class="form-control" name="name" id="name"
-                                placeholder="Enter Product Name"
-                                value="" onkeyup="Updateslug()">
+                                    <span class="text-danger validate" data-field="selling_price"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="stock">Stock</label>
+                                    <input type="number" class="form-control" name="stock" id="selling_price"
+                                        placeholder="Add Stock">
 
-                            <span class="text-danger validate" data-field="name"></span>
+                                    <span class="text-danger validate" data-field="stock"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="active_status">Active Status</label>
+                                    <select class="form-control select2" name="active_status" id="active_status"
+                                        data-placeholder="Select Active Status" style="width: 100%">
+                                        <option selected>Choose Type</option>
+                                        <option value="0">Inactive</option>
+                                        <option value="1">Active</option>
+                                    </select>
+
+                                    <span class="text-danger validate" data-field="active_status"></span>
+                                </div>
+                            </div>
+
                         </div>
 
-                        <div class="form-group">
-                            <label for="slug">Slug</label>
-                            <input type="text" class="form-control" readonly name="slug" id="slug"
-                                placeholder="Enter Slug">
-
-                            <span class="text-danger validate" data-field="slug"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="selling_price">Selling Price</label>
-                            <input type="number" class="form-control" name="selling_price" id="selling_price"
-                                placeholder="Enter Selling Price">
-
-                            <span class="text-danger validate" data-field="selling_price"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="active_status">Active Status</label>
-                            <select class="form-control select2" name="active_status" id="active_status"
-                                data-placeholder="Select Active Status" style="width: 100%">
-                                <option selected>Choose Type</option>
-                                <option value="0">Inactive</option>
-                                <option value="1">Active</option>
-                            </select>
-
-                            <span class="text-danger validate" data-field="active_status"></span>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
@@ -270,75 +297,114 @@
                 <form id="updateData">
                     <input type="hidden" id="id_e" name="id">
                     <div class="modal-body">
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="thumbnail_e">Product Thumbnail<small class="text-danger">(Please Upload 400px hight photo)</small></label>
+                                    <input type="file" class="form-control" name="thumbnail_e" id="thumbnail_e"
+                                        placeholder="Enter Product thumbnail"
+                                        value="">
 
-                        <div class="form-group">
-                            <label for="thumbnail_e">Product Thumbnail</label>
-                            <input type="file" class="form-control" name="thumbnail" id="thumbnail_e"
-                                placeholder="Enter Product thumbnail"
-                                value="">
+                                    <span class="text-danger validate" id="error_thumbnail_e"></span>
+                                </div>
+                                <div>
+                                    <img class="d-none" src="" id="previewThumbnail_e" width="200px" alt="">
+                                </div>
+                            </div>
 
-                            <span class="text-danger validate" id="error_thumbnail_e"></span>
-                        </div>
-                        <div>
-                            <img class="d-none" src="" id="previewThumbnail_e" width="200px" alt="">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="category_id">Category Name</label>
-                            <select class="form-control select2 category_id" name="category_id" id="category_id_e" style="width: 100%" data-placeholder="Select Category">
-                                <option value="" selected>Select Category</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                            <span class="text-danger validate" data-field="category_id"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="sub_category_id">Sub Category Name</label>
-                            <select class="form-control select2" name="sub_category_id" id="sub_category_id_e"
-                                style="width: 100%" data-placeholder="Select Subcategory">
-                                <option value="" selected>Select Subcategory</option>
-                            </select>
-
-                            <span class="text-danger validate" data-field="sub_category_id"></span>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="hover_image_e">Product Hover Image <small class="text-danger">(Please Upload 400px hight photo)</small></label>
+                                    <input type="file" class="form-control" name="hover_image_e" id="hover_image_e">
+                                    <span class="text-danger validate" data-field="hover_image_e"></span>
+                                </div>
+                                <div>
+                                    <img class="d-none" src="" id="hoverImage_e" width="180px" alt="">
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="name_e">Product Name</label>
-                            <input type="text" class="form-control" name="name" id="name_e"
-                                placeholder="Enter Product Name" name="name"
-                                value="" onkeyup="UpdateslugE()">
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="category_id">Category Name</label>
+                                    <select class="form-control select2 category_id" name="category_id" id="category_id_e" style="width: 100%" data-placeholder="Select Category">
+                                        <option value="" selected>Select Category</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger validate" data-field="category_id"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="sub_category_id">Sub Category Name</label>
+                                    <select class="form-control select2" name="sub_category_id" id="sub_category_id_e"
+                                        style="width: 100%" data-placeholder="Select Subcategory">
+                                        <option value="" selected>Select Subcategory</option>
+                                    </select>
 
-                            <span class="text-danger validate" id="error_name_e"></span>
+                                    <span class="text-danger validate" data-field="sub_category_id"></span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="slug_e">Slug</label>
-                            <input type="text" class="form-control" readonly name="slug" id="slug_e"
-                                placeholder="Enter Slug">
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="name_e">Product Name</label>
+                                    <input type="text" class="form-control" name="name" id="name_e"
+                                        placeholder="Enter Product Name" name="name"
+                                        value="" onkeyup="UpdateslugE()">
 
-                            <span class="text-danger validate" id="error_slug_e"></span>
+                                    <span class="text-danger validate" id="error_name_e"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="slug_e">Slug</label>
+                                    <input type="text" class="form-control" readonly name="slug" id="slug_e"
+                                        placeholder="Enter Slug">
+
+                                    <span class="text-danger validate" id="error_slug_e"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="selling_price_e">Selling Price</label>
+                                    <input type="number" class="form-control" name="selling_price" id="selling_price_e"
+                                        placeholder="Enter Selling Price">
+                                    <span class="text-danger validate" id="error_selling_price_e"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="stock_e">Stock</label>
+                                    <input type="number" class="form-control" name="stock" id="stock_e"
+                                        placeholder="Add Stock">
+                                    <span class="text-danger validate" id="error_stock_e"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                        <label for="active_status_e">Active Status</label>
+                                        <select class="form-control select2" name="active_status" id="active_status_e"
+                                            data-placeholder="Select Active Status" style="width: 100%">
+                                            <option selected>Choose Type</option>
+                                            <option value="0">Inactive</option>
+                                            <option value="1">Active</option>
+                                        </select>
+
+                                        <span class="text-danger validate" id="error_active_status_e"></span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="selling_price_e">Selling Price</label>
-                            <input type="number" class="form-control" name="selling_price" id="selling_price_e"
-                                placeholder="Enter Selling Price">
-
-                            <span class="text-danger validate" id="error_selling_price_e"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="active_status_e">Active Status</label>
-                            <select class="form-control select2" name="active_status" id="active_status_e"
-                                data-placeholder="Select Active Status" style="width: 100%">
-                                <option selected>Choose Type</option>
-                                <option value="0">Inactive</option>
-                                <option value="1">Active</option>
-                            </select>
-
-                            <span class="text-danger validate" id="error_active_status_e"></span>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
@@ -369,7 +435,7 @@
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">Product Name</th>
-                    <th scope="col">Product Thumbnail</th>
+                    <th scope="col">Thumbnail</th>
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
@@ -441,10 +507,17 @@
             $("#thumbnail").change(function() {
                 pleasePreview(this, 'previewThumbnail');
             });
+            $("#thumbnail_e").change(function() {
+                pleasePreview(this, 'previewThumbnail_e');
+            });
+
 
             //SHOW IMAGE WHEN hover image
             $("#hover_image").change(function() {
                 pleasePreview(this, 'hoverImage');
+            });
+            $("#hover_image_e").change(function() {
+                pleasePreview(this, 'hoverImage_e');
             });
 
             // STORE PRODUCT
@@ -489,6 +562,7 @@
                 e.preventDefault();
                 $('#editmodal').modal('show');
                 var category_id = $(this).data('category_id');
+                console.log(category_id);
                 var subcategory_id = $(this).data('sub_category_id');
                 $('#category_id_e').val(category_id).trigger('change');
                 getSubcategory(category_id, subcategory_id);
@@ -497,6 +571,7 @@
                 $('#name_e').val($(this).data('name'));
                 $('#slug_e').val($(this).data('slug'));
                 $('#selling_price_e').val($(this).data('selling_price'));
+                $('#stock_e').val($(this).data('stock'));
                 $('#active_status_e').val($(this).data('active_status')).trigger('change');
             });
 
@@ -537,13 +612,13 @@
                 });
             });
 
-
             //GET SUBCATEGORY VIA CATEGORY (AJAX)
             $("#category_id").change(function (e) {
                 e.preventDefault();
                 var category_id = $(this).val();
                 getSubcategory(category_id, null);
             });
+
             $("#category_id_e").change(function (e) {
                 e.preventDefault();
                 var category_id = $(this).val();

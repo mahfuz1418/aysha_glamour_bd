@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class SubCategoryController extends Controller
@@ -22,20 +23,27 @@ class SubCategoryController extends Controller
     {
         $validatorData = Validator::make($request->all(), [
             'subcategoryName' => 'required|string|max:255|unique:categories,name',
+            'subcategory_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'slug' => 'required|string|max:255',
             'active_status' =>  'required|in:0,1',
-            'parent_id' =>  'required|integer',
+            'category_id' =>  'required|integer',
         ],[
             'subcategoryName.required' => 'Please Enter The Subcategory Name',
+            'subcategory_image.required' => 'Please Select Subcategory Image',
             'slug.required' => 'Slug Name Can Not Be Empty',
             'active_status.required' =>  'Please Select The Status',
-            'parent_id.required' =>  'Please Select Category',
+            'category_id.required' =>  'Please Select Category',
         ])->validate();
 
+        $image = '';
+        if ($request->file('subcategory_image')) {
+            $image = uploadPlease($request->file('subcategory_image'));
+        }
         $subcategory = new SubCategory();
         $subcategory->name = $request->subcategoryName;
+        $subcategory->subcategory_image = $image;
         $subcategory->slug = $request->slug;
-        $subcategory->parent_id = $request->parent_id;
+        $subcategory->category_id = $request->category_id;
         $subcategory->active_status = $request->active_status;
         $subcategory->created_by = Auth::id();
         $subcategory->save();
@@ -61,14 +69,31 @@ class SubCategoryController extends Controller
         $check_all = array(
             'slug' => 'required|string|max:255',
             'active_status' =>  'required|in:0,1',
-            'parent_id' =>  'required|integer'
+            'category_id_e' =>  'required|integer'
         );
         $marge = array_merge($check_cat, $check_all);
         $validatorData = Validator::make($request->all(), $marge)->validate();
 
+        if ($request->file('subcategory_image_e')) {
+            $request->validate(
+                [
+                    'subcategory_image_e' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                ],
+                [
+                    'subcategory_image_e.required' => 'Please Choose a subcategory image',
+                ],
+            );
+
+            if (isset($subcategory) && is_object($subcategory) && isset($subcategory->subcategory_image)) {
+                $image = '';
+                File::delete($subcategory->subcategory_image);
+                $image = uploadPlease($request->file('subcategory_image_e'));
+                $subcategory->subcategory_image = $image;
+            }
+        }
         $subcategory->name = $request->subcategoryName;
         $subcategory->slug = $request->slug;
-        $subcategory->parent_id = $request->parent_id;
+        $subcategory->category_id = $request->category_id_e;
         $subcategory->active_status = $request->active_status;
         $subcategory->created_by = Auth::id();
         $subcategory->save();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 
 class HomePageController extends Controller
@@ -11,7 +12,8 @@ class HomePageController extends Controller
     public function index()
     {
         $data['categories'] = Category::get();
-        // $data['products'] = Product::latest()->take(5)->get();
+        $data['sub_categories'] = SubCategory::get();
+        $data['feature_products'] = Product::where('pinned', 1)->get();
         return view('frontend.index', $data);
     }
 }

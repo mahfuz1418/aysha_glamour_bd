@@ -55,6 +55,7 @@
                             <tr>
                                 <th scope="col">Serial</th>
                                 <th scope="col">Subcategory</th>
+                                <th scope="col">Subcategory Image</th>
                                 <th scope="col">Slug</th>
                                 <th scope="col">Categoy</th>
                                 <th scope="col">Active Status</th>
@@ -70,6 +71,7 @@
                                 <tr>
                                     <th scope="row">{{ $serials++ }}</th>
                                     <td>{{ $sub_cat->name }}</td>
+                                    <td><img width="80px" src="{{ asset($sub_cat->subcategory_image) }}" alt="" srcset=""></td>
                                     <td>{{ $sub_cat->slug }}</td>
                                     <td>{{ $sub_cat->category->name }}</td>
                                     <td><span
@@ -80,7 +82,7 @@
 
                                         <button type="button" data-toggle="modal" data-target="#editNew"
                                             data-id="{{ $sub_cat->id }}"
-                                            data-category_name="{{ $sub_cat->parent_id }}"
+                                            data-category_name="{{ $sub_cat->category_id }}"
                                             data-name="{{ $sub_cat->name }}"
                                             data-slug="{{ $sub_cat->slug }}"
                                             data-active_status="{{ $sub_cat->active_status }}"
@@ -112,7 +114,7 @@
     <!-- Add Subcategory -->
     <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Add Subcategory</h5>
@@ -122,43 +124,66 @@
                 </div>
                 <form id="formData">
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="parent_id">Select Category</label>
-                            <select class="form-control select2" name="parent_id" id="parent_id" style="width: 100%"
-                                data-placeholder="Select Subcategory">
-                                <option value="" selected>Select Subcategory</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                            <span class="text-danger validate" data-field="parent_id"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="subcategoryName">Subategory Name</label>
-                            <input type="text" class="form-control" name="subcategoryName" id="subcategoryName"
-                                placeholder="Enter Subategory Name" onkeyup="Updateslug()">
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                        <label for="category_id">Select Category</label>
+                                        <select class="form-control select2" name="category_id" id="category_id" style="width: 100%"
+                                            data-placeholder="Select Subcategory">
+                                            <option value="" selected>Select Subcategory</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <span class="text-danger validate" data-field="category_id"></span>
+                                    </div>
+                                </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="subcategoryName">Subategory Name</label>
+                                    <input type="text" class="form-control" name="subcategoryName" id="subcategoryName"
+                                        placeholder="Enter Subategory Name" onkeyup="Updateslug()">
 
-                            <span class="text-danger validate" data-field="subcategoryName"></span>
+                                    <span class="text-danger validate" data-field="subcategoryName"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="slug">Subcategory Slug</label>
+                                    <input type="text" class="form-control" readonly name="slug" id="slug"
+                                        placeholder="Slug Here..." >
+
+                                    <span class="text-danger validate" data-field="slug"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="active_status">Active Status</label>
+                                    <select class="form-control select2" name="active_status" id="active_status"
+                                        data-placeholder="Select Active Status" style="width: 100%">
+                                        <option value="">Choose Type</option>
+                                        <option value="0">Inactive</option>
+                                        <option value="1">Active</option>
+                                    </select>
+                                    <span class="text-danger validate" data-field="active_status"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="subcategory_image">Subcategory Image <small class="text-danger">(Please Upload 300px hight photo)</small></label>
+                                    <input type="file" class="form-control" name="subcategory_image" id="subcategory_image">
+                                    <span class="text-danger validate" data-field="subcategory_image"></span>
+                                </div>
+                                <div>
+                                    <img class="d-none" src="" id="previewThumbnail" height="150px" alt="">
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="slug">Subcategory Slug</label>
-                            <input type="text" class="form-control" readonly name="slug" id="slug"
-                                placeholder="Slug Here..." >
-
-                            <span class="text-danger validate" data-field="slug"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="active_status">Active Status</label>
-                            <select class="form-control select2" name="active_status" id="active_status"
-                                data-placeholder="Select Active Status" style="width: 100%">
-                                <option value="">Choose Type</option>
-                                <option value="0">Inactive</option>
-                                <option value="1">Active</option>
-                            </select>
-                            <span class="text-danger validate" data-field="active_status"></span>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -173,7 +198,7 @@
     <!-- edit -->
     <div class="modal fade" id="editNew" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Edit Subcategory</h5>
@@ -184,41 +209,64 @@
                 <form id="updateData">
                     <div class="modal-body">
                         <input type="text" id="id_e" name="id_e" hidden>
-                        <div class="form-group">
-                            <label for="parent_id">Select Category</label>
-                            <select class="form-control select2" name="parent_id" id="parent_id_e" style="width: 100%"
-                                data-placeholder="Select Subcategory">
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                            <span class="text-danger validate" data-field="parent_id"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="subcategoryName">Subcategory Name</label>
-                            <input type="text" class="form-control" name="subcategoryName" id="subcategoryName_e"
-                                placeholder="Enter Category Name" onkeyup="UpdateslugE()">
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                        <label for="category_id_e">Select Category</label>
+                                        <select class="form-control select2" name="category_id_e" id="category_id_e" style="width: 100%"
+                                            data-placeholder="Select Subcategory">
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <span class="text-danger validate" data-field="category_id_e"></span>
+                                    </div>
+                                </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="subcategoryName">Subcategory Name</label>
+                                    <input type="text" class="form-control" name="subcategoryName" id="subcategoryName_e"
+                                        placeholder="Enter Category Name" onkeyup="UpdateslugE()">
 
-                            <span class="text-danger validate" data-field="subcategoryName"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="slug">Category Slug</label>
-                            <input type="text" class="form-control" readonly name="slug" id="slug_e"
-                                placeholder="Slug Here..." >
-
-                            <span class="text-danger validate" data-field="slug"></span>
+                                    <span class="text-danger validate" data-field="subcategoryName"></span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="active_status">Active Status</label>
-                            <select class="form-control select2" name="active_status" id="active_status_e"
-                                data-placeholder="Select Active Status" style="width: 100%">
-                                <option value="">Choose Type</option>
-                                <option value="0">Inactive</option>
-                                <option value="1">Active</option>
-                            </select>
-                            <span class="text-danger validate" data-field="active_status"></span>
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="slug">Category Slug</label>
+                                    <input type="text" class="form-control" readonly name="slug" id="slug_e"
+                                        placeholder="Slug Here..." >
+
+                                    <span class="text-danger validate" data-field="slug"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="active_status">Active Status</label>
+                                    <select class="form-control select2" name="active_status" id="active_status_e"
+                                        data-placeholder="Select Active Status" style="width: 100%">
+                                        <option value="">Choose Type</option>
+                                        <option value="0">Inactive</option>
+                                        <option value="1">Active</option>
+                                    </select>
+                                    <span class="text-danger validate" data-field="active_status"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="subcategory_image_e">Subcategory Image <small class="text-danger">(Please Upload 300px hight photo)</small></label>
+                                    <input type="file" class="form-control" name="subcategory_image_e" id="subcategory_image_e">
+                                    <span class="text-danger validate" data-field="subcategory_image_e"></span>
+                                </div>
+                                <div>
+                                    <img class="d-none" src="" id="previewThumbnail_e" height="150px" alt="">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -230,9 +278,6 @@
         </div>
     </div>
 </div>
-
-<!-- Recycle Bin -->
-
 
   <!-- Recycle Bin -->
   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -326,6 +371,14 @@
     <script>
         $(document).ready(function () {
 
+            $("#subcategory_image").change(function() {
+                pleasePreview(this, 'previewThumbnail');
+            });
+
+            $("#subcategory_image_e").change(function() {
+                pleasePreview(this, 'previewThumbnail_e');
+            });
+
             // STORE SUBCATEGORY
             $("#formData").submit(function(e) {
                 e.preventDefault();
@@ -371,7 +424,7 @@
                 $('#subcategoryName_e').val($(this).data('name'));
                 $('#slug_e').val($(this).data('slug'));
                 $('#active_status_e').val($(this).data('active_status')).trigger('change');
-                $('#parent_id_e').val($(this).data('category_name')).trigger('change');
+                $('#category_id_e').val($(this).data('category_name')).trigger('change');
             });
 
             // EDIT SUBCATEGORY

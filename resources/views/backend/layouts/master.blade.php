@@ -186,6 +186,16 @@
     }
 </script>
 
+@if (Session::has('success'))
+<script>
+    toastr.success("{{ Session::get('success') }}")
+</script>
+@elseif (!empty(Session::get('error')))
+<script>
+    toastr.error("{{ Session::get('error') }}")
+</script>
+@endif
+
 <script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote.min.js" integrity="sha512-6rE6Bx6fCBpRXG/FWpQmvguMWDLWMQjPycXMr35Zx/HRD9nwySZswkkLksgyQcvrpYMx0FELLJVBvWFtubZhDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </script>

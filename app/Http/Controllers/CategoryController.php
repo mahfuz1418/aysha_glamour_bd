@@ -30,12 +30,14 @@ class CategoryController extends Controller
             'active_status.required' =>  'Please Select The Status',
         ])->validate();
 
+
         $category = new Category();
         $category->name = $request->categoryName;
         $category->slug = $request->slug;
         $category->active_status = $request->active_status;
         $category->created_by = Auth::id();
         $category->save();
+
 
         if ($category) {
             return response()->json([
@@ -92,7 +94,7 @@ class CategoryController extends Controller
         $restoreCategory = Category::onlyTrashed()->find($id)->restore();
         return back()->with('message', 'Category Restored Successfully');
     }
-    
+
     //RESTORE ALL CATEGORY
     public function resotoreAllCategory()
     {

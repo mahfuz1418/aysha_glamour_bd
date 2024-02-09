@@ -35,6 +35,7 @@ class ProductController extends Controller
                 'name' => 'required|string|max:255',
                 'slug' => "required|string|max:255|unique:products,slug",
                 'selling_price' => 'required|numeric',
+                'stock' => 'required|numeric',
                 'active_status' => 'required|in:0,1',
             ],
             [
@@ -45,6 +46,7 @@ class ProductController extends Controller
                 'name.required' => 'Product Name Is Required',
                 'slug.required' => 'Product Slug Is Required',
                 'selling_price.required' => 'Product Selling Price Is Required',
+                'stock.required' => 'Stock Is Required',
                 'active_status.required' => 'Product Active Status Is Required',
             ],
         );
@@ -58,12 +60,18 @@ class ProductController extends Controller
             $image1 = uploadPlease($request->file('hover_image'));
         }
 
+        $category_name = Category::where('id', $request->category_id)->value('name');
+        $sub_category_name = SubCategory::where('id', $request->sub_category_id)->value('name');
+
         $product = new Product();
-        $product->category_id = $request->category_id;
+        $product->category_id =$request->category_id;
+        $product->category_name = $category_name;
         $product->sub_category_id = $request->sub_category_id;
+        $product->sub_category_name = $sub_category_name;
         $product->name = $request->name;
         $product->slug = $request->slug;
         $product->selling_price = $request->selling_price;
+        $product->stock = $request->stock;
         $product->active_status = $request->active_status;
         $product->thumbnail = $image;
         $product->hover_image = $image1;
@@ -89,6 +97,7 @@ class ProductController extends Controller
                 'category_id' => 'required|numeric',
                 'sub_category_id' => 'required|numeric',
                 'selling_price' => 'required|numeric',
+                'stock' => 'required|numeric',
                 'active_status' => 'required|in:0,1',
             ],
             [
@@ -97,12 +106,14 @@ class ProductController extends Controller
                 'name.required' => 'Product Name Is Required',
                 'slug.required' => 'Product Slug Is Required',
                 'selling_price.required' => 'Product Selling Price Is Required',
+                'stock.required' => 'Stock Is Required',
                 'active_status.required' => 'Product Active Status Is Required',
             ],
         );
 
         $product = Product::findOrFail($request->id);
         $image = $product->thumbnail;
+        $image1 = $product->hover_image;
 
         if ($product->name != $request->name) {
             $request->validate(
@@ -113,31 +124,51 @@ class ProductController extends Controller
             );
         }
 
-        if ($request->file('thumbnail')) {
+        if ($request->file('thumbnail_e')) {
             $request->validate(
                 [
-                    'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                    'thumbnail_e' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
                 ],
                 [
-                    'thumbnail.required' => 'Please Choose a Thumbnail',
+                    'thumbnail_e.required' => 'Please Choose a Thumbnail',
                 ],
             );
 
             if (isset($product) && is_object($product) && isset($product->thumbnail)) {
                 File::delete($product->thumbnail);
+                $image = uploadPlease($request->file('thumbnail_e'));
             }
+        }
+        if ($request->file('hover_image_e')) {
+            $request->validate(
+                [
+                    'hover_image_e' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                ],
+                [
+                    'hover_image_e.required' => 'Please Choose a Hover Image',
+                ],
+            );
 
-            $image = uploadPlease($request->file('thumbnail'));
+            if (isset($product) && is_object($product) && isset($product->hover_image)) {
+                File::delete($product->hover_image);
+                $image1 = uploadPlease($request->file('hover_image_e'));
+            }
         }
 
+        $category_name = Category::where('id', $request->category_id)->value('name');
+        $sub_category_name = SubCategory::where('id', $request->sub_category_id)->value('name');
 
-        $product->category_id = $request->category_id;
+        $product->category_id =$request->category_id;
+        $product->category_name = $category_name;
         $product->sub_category_id = $request->sub_category_id;
+        $product->sub_category_name = $sub_category_name;
         $product->name = $request->name;
         $product->slug = $request->slug;
         $product->selling_price = $request->selling_price;
+        $product->stock = $request->stock;
         $product->active_status = $request->active_status;
         $product->thumbnail = $image;
+        $product->hover_image = $image1;
         $product->updated_by = Auth::id();
         $product->save();
 
@@ -166,7 +197,7 @@ class ProductController extends Controller
 
         if ($pin_count >= 6 && $status == 0) {
             $notification = [
-                'error' => 'You have reached the maximum product count',
+                'error' => "You can't pin more then 6 products",
             ];
             return back()->with($notification);
         }
@@ -226,6 +257,7 @@ class ProductController extends Controller
 
         $product = Product::onlyTrashed()->find($id);
         unlink(public_path($product->thumbnail));
+        unlink(public_path($product->hover_image));
         $product->forceDelete();
         return back()->with('message', 'Product Deleted Permanently');
      }
@@ -236,6 +268,7 @@ class ProductController extends Controller
          $trushProduct = Product::onlyTrashed()->where('deleted_at', '!=' , null)->get();
          foreach ($trushProduct as $trash) {
              unlink(public_path($trash->thumbnail));
+             unlink(public_path($trash->hover_image));
              $trash->forceDelete();
          }
          return back()->with('message', 'All Product Permanently Deleted');
@@ -287,7 +320,7 @@ class ProductController extends Controller
     //--------------------------------GET SUBCATEGORY VIA AJAX POST---------------------------------
     public function getSubcategoryAjax(Request $request)
     {
-        $data['subcategory'] = SubCategory::where('parent_id', $request->category_id)->get();
+        $data['subcategory'] = SubCategory::where('category_id', $request->category_id)->get();
         return response()->json($data);
     }
 

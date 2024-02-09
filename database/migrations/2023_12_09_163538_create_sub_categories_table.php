@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('sub_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('subcategory_image');
             $table->string('slug')->nullable();
             $table->boolean('active_status')->default(1);
-            $table->foreignId('parent_id');
+            $table->foreignId('category_id');
             $table->foreignId('created_by');
             $table->foreignId('updated_by')->nullable();
             $table->softDeletes();
