@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeSliderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCategoryController;
@@ -64,6 +65,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/product-description/{id}', [ProductController::class, 'productDescriptionIndex'])->name('product-description');
     Route::post('/store-product-description', [ProductController::class, 'storeProductDescription'])->name('store-product-description');
 
+    // Home Page
+    Route::get('/home-slider', [HomeSliderController::class, 'index'])->name('home-slider');
+    Route::post('/store-slider', [HomeSliderController::class, 'storeSlider'])->name('store-slider');
+    Route::post('/edit-slider', [HomeSliderController::class, 'editSlider'])->name('edit-slider');
+    Route::get('/delete-slider/{id}', [HomeSliderController::class, 'deleteSlider'])->name('delete-slider');
+    Route::get('/restore-slider/{id}', [HomeSliderController::class, 'resotoreSlider'])->name('restore-slider');
+    Route::get('/restore-all-slider', [HomeSliderController::class, 'resotoreAllSlider'])->name('restore-all-slider');
+    Route::get('/force-delete-slider/{id}', [HomeSliderController::class, 'forceDeleteSlider'])->name('force-delete-slider');
+    Route::get('/force-delete-all-slider', [HomeSliderController::class, 'forceDeleteAllSlider'])->name('force-delete-all-slider');
 
 
 

@@ -64,7 +64,7 @@ class ProductController extends Controller
         $sub_category_name = SubCategory::where('id', $request->sub_category_id)->value('name');
 
         $product = new Product();
-        $product->category_id =$request->category_id;
+        $product->category_id = $request->category_id;
         $product->category_name = $category_name;
         $product->sub_category_id = $request->sub_category_id;
         $product->sub_category_name = $sub_category_name;
@@ -94,20 +94,18 @@ class ProductController extends Controller
     {
         $request->validate(
             [
-                'category_id' => 'required|numeric',
-                'sub_category_id' => 'required|numeric',
-                'selling_price' => 'required|numeric',
-                'stock' => 'required|numeric',
-                'active_status' => 'required|in:0,1',
+                'category_id_e' => 'required|numeric',
+                'sub_category_id_e' => 'required|numeric',
+                'selling_price_e' => 'required|numeric',
+                'stock_e' => 'required|numeric',
+                'active_status_e' => 'required|in:0,1',
             ],
             [
-                'category_id.required' => 'Product Category Is Required',
-                'sub_category_id.required' => 'Product Subcategory Is Required',
-                'name.required' => 'Product Name Is Required',
-                'slug.required' => 'Product Slug Is Required',
-                'selling_price.required' => 'Product Selling Price Is Required',
-                'stock.required' => 'Stock Is Required',
-                'active_status.required' => 'Product Active Status Is Required',
+                'category_id_e.required' => 'Product Category Is Required',
+                'sub_category_id_e.required' => 'Product Subcategory Is Required',
+                'selling_price_e.required' => 'Product Selling Price Is Required',
+                'stock_e.required' => 'Stock Is Required',
+                'active_status_e.required' => 'Product Active Status Is Required',
             ],
         );
 
@@ -115,13 +113,11 @@ class ProductController extends Controller
         $image = $product->thumbnail;
         $image1 = $product->hover_image;
 
-        if ($product->name != $request->name) {
-            $request->validate(
-                [
-                    'name' => 'required|string|max:255',
-                    'slug' => "required|string|max:255|unique:products,slug",
-                ]
-            );
+        if ($product->name != $request->name_e) {
+            $request->validate([
+                    'name_e' => 'required|string|max:255',
+                    'slug_e' => "required|string|max:255|unique:products,slug",
+            ]);
         }
 
         if ($request->file('thumbnail_e')) {
@@ -139,6 +135,7 @@ class ProductController extends Controller
                 $image = uploadPlease($request->file('thumbnail_e'));
             }
         }
+
         if ($request->file('hover_image_e')) {
             $request->validate(
                 [
@@ -155,18 +152,18 @@ class ProductController extends Controller
             }
         }
 
-        $category_name = Category::where('id', $request->category_id)->value('name');
-        $sub_category_name = SubCategory::where('id', $request->sub_category_id)->value('name');
+        $category_name = Category::where('id', $request->category_id_e)->value('name');
+        $sub_category_name = SubCategory::where('id', $request->sub_category_id_e)->value('name');
 
-        $product->category_id =$request->category_id;
+        $product->category_id =$request->category_id_e;
         $product->category_name = $category_name;
-        $product->sub_category_id = $request->sub_category_id;
+        $product->sub_category_id = $request->sub_category_id_e;
         $product->sub_category_name = $sub_category_name;
-        $product->name = $request->name;
-        $product->slug = $request->slug;
-        $product->selling_price = $request->selling_price;
-        $product->stock = $request->stock;
-        $product->active_status = $request->active_status;
+        $product->name = $request->name_e;
+        $product->slug = $request->slug_e;
+        $product->selling_price = $request->selling_price_e;
+        $product->stock = $request->stock_e;
+        $product->active_status = $request->active_status_e;
         $product->thumbnail = $image;
         $product->hover_image = $image1;
         $product->updated_by = Auth::id();
@@ -274,54 +271,52 @@ class ProductController extends Controller
          return back()->with('message', 'All Product Permanently Deleted');
      }
 
-    //--------------------------------PRODUCT DESCRIPTION START---------------------------------
-
-     public function productDescriptionIndex($id)
-     {
-        $data['product'] = Product::findOrFail($id);
-        $data['productDescriptions'] = ProductDescription::where('product_id', $id)->paginate(10);
-        return view('backend.product.productDescription.product_description', $data);
-     }
-
-     public function storeProductDescription(Request $request)
-     {
-        $request->validate(
-            [
-                'product_id' => 'required|integer',
-                'active_status' => 'required|integer',
-                'content' => 'required|string',
-            ],
-            [
-                'product_id.required' => 'Required',
-                'active_status.required' => 'Active Status Is Required',
-                'content.required' => 'Please Write Or Past The Content',
-            ],
-        );
-
-        $productDes = new ProductDescription();
-        $productDes->product_id = $request->product_id;
-        $productDes->active_status = $request->active_status;
-        $productDes->content = $request->content;
-        $productDes->created_by = Auth::id();
-        $productDes->save();
-
-        if ($productDes) {
-            return response()->json([
-                'success' => 'Product Description Added Successfully',
-            ]);
-        } else {
-            return response()->json([
-                'success' => 'Something Failed',
-            ]);
-        }
-     }
-
-
     //--------------------------------GET SUBCATEGORY VIA AJAX POST---------------------------------
     public function getSubcategoryAjax(Request $request)
     {
         $data['subcategory'] = SubCategory::where('category_id', $request->category_id)->get();
         return response()->json($data);
+    }
+
+    //--------------------------------PRODUCT DESCRIPTION START---------------------------------
+    public function productDescriptionIndex($id)
+    {
+       $data['product'] = Product::findOrFail($id);
+       $data['productDescriptions'] = ProductDescription::where('product_id', $id)->paginate(10);
+       return view('backend.product.productDescription.product_description', $data);
+    }
+
+    public function storeProductDescription(Request $request)
+    {
+       $request->validate(
+           [
+               'product_id' => 'required|integer',
+               'active_status' => 'required|integer',
+               'content' => 'required|string',
+           ],
+           [
+               'product_id.required' => 'Required',
+               'active_status.required' => 'Active Status Is Required',
+               'content.required' => 'Please Write Or Past The Content',
+           ],
+       );
+
+       $productDes = new ProductDescription();
+       $productDes->product_id = $request->product_id;
+       $productDes->active_status = $request->active_status;
+       $productDes->content = $request->content;
+       $productDes->created_by = Auth::id();
+       $productDes->save();
+
+       if ($productDes) {
+           return response()->json([
+               'success' => 'Product Description Added Successfully',
+           ]);
+       } else {
+           return response()->json([
+               'success' => 'Something Failed',
+           ]);
+       }
     }
 
 

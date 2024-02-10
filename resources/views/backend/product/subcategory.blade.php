@@ -219,16 +219,16 @@
                                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach
                                         </select>
-                                        <span class="text-danger validate" data-field="category_id_e"></span>
+                                        <span class="text-danger validate_e" data-field="category_id_e"></span>
                                     </div>
                                 </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="subcategoryName">Subcategory Name</label>
-                                    <input type="text" class="form-control" name="subcategoryName" id="subcategoryName_e"
+                                    <label for="subcategoryName_e">Subcategory Name</label>
+                                    <input type="text" class="form-control" name="subcategoryName_e" id="subcategoryName_e"
                                         placeholder="Enter Category Name" onkeyup="UpdateslugE()">
 
-                                    <span class="text-danger validate" data-field="subcategoryName"></span>
+                                    <span class="text-danger validate_e" data-field="subcategoryName_e"></span>
                                 </div>
                             </div>
                         </div>
@@ -236,23 +236,23 @@
                         <div class="col-12 d-flex">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="slug">Category Slug</label>
-                                    <input type="text" class="form-control" readonly name="slug" id="slug_e"
+                                    <label for="slug_e">Category Slug</label>
+                                    <input type="text" class="form-control" readonly name="slug_e" id="slug_e"
                                         placeholder="Slug Here..." >
 
-                                    <span class="text-danger validate" data-field="slug"></span>
+                                    <span class="text-danger validate_e" data-field="slug_e"></span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="active_status">Active Status</label>
-                                    <select class="form-control select2" name="active_status" id="active_status_e"
+                                    <label for="active_status_e">Active Status</label>
+                                    <select class="form-control select2" name="active_status_e" id="active_status_e"
                                         data-placeholder="Select Active Status" style="width: 100%">
                                         <option value="">Choose Type</option>
                                         <option value="0">Inactive</option>
                                         <option value="1">Active</option>
                                     </select>
-                                    <span class="text-danger validate" data-field="active_status"></span>
+                                    <span class="text-danger validate_e" data-field="active_status_e"></span>
                                 </div>
                             </div>
                         </div>
@@ -261,7 +261,7 @@
                                 <div class="form-group">
                                     <label for="subcategory_image_e">Subcategory Image <small class="text-danger">(Please Upload 300px hight photo)</small></label>
                                     <input type="file" class="form-control" name="subcategory_image_e" id="subcategory_image_e">
-                                    <span class="text-danger validate" data-field="subcategory_image_e"></span>
+                                    <span class="text-danger validate_e" data-field="subcategory_image_e"></span>
                                 </div>
                                 <div>
                                     <img class="d-none" src="" id="previewThumbnail_e" height="150px" alt="">
@@ -420,6 +420,8 @@
             $('.editData').click(function (e) {
                 e.preventDefault();
                 $('#editmodal').modal('show');
+                $('.validate_e').text('');
+
                 $('#id_e').val($(this).data('id'));
                 $('#subcategoryName_e').val($(this).data('name'));
                 $('#slug_e').val($(this).data('slug'));
@@ -446,9 +448,9 @@
                         }
                     },
                     error: function (error) {
-                        $('.validate').text('');
+                        $('.validate_e').text('');
                         $.each(error.responseJSON.errors, function (field_name, error) {
-                             const errorElement = $('.validate[data-field="' + field_name + '"]');
+                             const errorElement = $('.validate_e[data-field="' + field_name + '"]');
                              if (errorElement.length > 0) {
                                 errorElement.text(error[0]);
                                 toastr.error(error);

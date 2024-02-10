@@ -61,14 +61,14 @@ class SubCategoryController extends Controller
 
         if ($subcategory->name != $request->categoryName) {
             $check_cat = array(
-                'subcategoryName' => 'required|string|max:255|unique:categories,name',
+                'subcategoryName_e' => 'required|string|max:255|unique:categories,name',
             );
         } else {
             $check_cat = array();
         }
         $check_all = array(
-            'slug' => 'required|string|max:255',
-            'active_status' =>  'required|in:0,1',
+            'slug_e' => 'required|string|max:255',
+            'active_status_e' =>  'required|in:0,1',
             'category_id_e' =>  'required|integer'
         );
         $marge = array_merge($check_cat, $check_all);
@@ -91,10 +91,11 @@ class SubCategoryController extends Controller
                 $subcategory->subcategory_image = $image;
             }
         }
-        $subcategory->name = $request->subcategoryName;
-        $subcategory->slug = $request->slug;
+
+        $subcategory->name = $request->subcategoryName_e;
+        $subcategory->slug = $request->slug_e;
         $subcategory->category_id = $request->category_id_e;
-        $subcategory->active_status = $request->active_status;
+        $subcategory->active_status = $request->active_status_e;
         $subcategory->created_by = Auth::id();
         $subcategory->save();
         if ($subcategory) {

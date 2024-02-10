@@ -5,34 +5,23 @@
     	<!--Home slider-->
     	<div class="slideshow slideshow-wrapper pb-section sliderFull">
         	<div class="home-slideshow">
-            	<div class="slide">
-                	<div class="blur-up lazyload bg-size">
-                        <img class="blur-up lazyload bg-img" data-src="{{ asset('frontend') }}/assets/images/slideshow-banners/belle-banner1.jpg" src="{{ asset('frontend') }}/{{ asset('frontend') }}/assets/images/slideshow-banners/belle-banner1.jpg" alt="Shop Our New Collection" title="Shop Our New Collection" />
-                        <div class="slideshow__text-wrap slideshow__overlay classic bottom">
-                            <div class="slideshow__text-content bottom">
-                                <div class="wrap-caption center">
-                                        <h2 class="h1 mega-title slideshow__title">Shop Our New Collection</h2>
-                                        <span class="mega-subtitle slideshow__subtitle">From Hight to low, classic or modern. We have you covered</span>
-                                        <span class="btn">Shop now</span>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="slide">
-                	<div class="blur-up lazyload bg-size">
-                        <img class="blur-up lazyload bg-img" data-src="{{ asset('frontend') }}/assets/images/slideshow-banners/belle-banner2.jpg" src="{{ asset('frontend') }}/assets/images/slideshow-banners/belle-banner2.jpg" alt="Summer Bikini Collection" title="Summer Bikini Collection" />
-                        <div class="slideshow__text-wrap slideshow__overlay classic bottom">
-                            <div class="slideshow__text-content bottom">
-                                <div class="wrap-caption center">
-                                    <h2 class="h1 mega-title slideshow__title">Summer Bikini Collection</h2>
-                                    <span class="mega-subtitle slideshow__subtitle">Save up to 50% off this weekend only</span>
-                                    <span class="btn">Shop now</span>
+                @foreach ($sliders as $slider)
+                    <div class="slide">
+                        <div class="blur-up lazyload bg-size">
+                            <img class="blur-up lazyload bg-img" src="{{ asset($slider->thumbnail) }}" alt="Shop Our New Collection" title="Shop Our New Collection" />
+                            <div class="slideshow__text-wrap slideshow__overlay classic bottom">
+                                <div class="slideshow__text-content bottom">
+                                    <div class="wrap-caption center">
+                                            <h2 class="h1 mega-title slideshow__title">{{ $slider->slider_heading }}</h2>
+                                            <span class="mega-subtitle slideshow__subtitle">{{ $slider->slider_paragraph }}</span>
+                                            <span class="btn">Shop now</span>
+                                        </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
+
             </div>
         </div>
         <!--End Home slider-->
@@ -51,7 +40,7 @@
                                 <li rel="tab2">Men</li>
                                 <li rel="tab3">Sale</li> --}}
                                 @foreach ($categories as $category)
-                                    <li rel="{{ $category->slug }}">{{ $category->name }}</li>
+                                    <li class="{{ $category->slug ? 'active' : '' }}" rel="{{ $category->slug }}">{{ $category->name }}</li>
                                 @endforeach
                             </ul>
 
@@ -68,7 +57,7 @@
                                                     <!-- start product image -->
                                                     <div class="product-image">
                                                         <!-- start product image -->
-                                                        <a href="short-description.html">
+                                                        <a href="{{ route('product-details') }}">
                                                             <!-- image -->
                                                             <img class="primary blur-up lazyload" style="height: 350px; background-size:fit" src="{{ asset($product->thumbnail) }}" alt="image" title="product">
                                                             <!-- End image -->

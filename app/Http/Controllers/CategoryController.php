@@ -53,23 +53,23 @@ class CategoryController extends Controller
 
         if ($category->name != $request->categoryName) {
             $check_cat = array(
-                'categoryName' => 'required|string|max:255|unique:categories,name',
+                'categoryName_e' => 'required|string|max:255|unique:categories,name',
             );
         } else {
             $check_cat = array();
         }
 
         $check_all = array(
-            'slug' => 'required|string|max:255',
-            'active_status' =>  'required|in:0,1',
+            'slug_e' => 'required|string|max:255|unique:categories,slug',
+            'active_status_e' => 'required|in:0,1',
         );
         $marge = array_merge($check_cat, $check_all);
         $validatorData = Validator::make($request->all(), $marge)->validate();
 
 
-        $category->name = $request->categoryName;
-        $category->slug = $request->slug;
-        $category->active_status = $request->active_status;
+        $category->name = $request->categoryName_e;
+        $category->slug = $request->slug_e;
+        $category->active_status = $request->active_status_e;
         $category->updated_by = Auth::id();
         $category->save();
 

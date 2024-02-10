@@ -148,8 +148,6 @@
         </div>
     </section>
 
-
-
     <!--add Modal -->
     <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -166,7 +164,7 @@
                         <div class="col-12 d-flex">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="thumbnail">Product Image <small class="text-danger">(Please Upload 400px hight photo)</small></label>
+                                    <label for="thumbnail">Product Image <small class="text-info"> (Please Upload 400px hight photo)</small></label>
                                     <input type="file" class="form-control" name="thumbnail" id="thumbnail">
                                     <span class="text-danger validate" data-field="thumbnail"></span>
                                 </div>
@@ -176,7 +174,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="hover_image">Product Hover Image <small class="text-danger">(Please Upload 400px hight photo)</small></label>
+                                    <label for="hover_image">Product Hover Image <small class="text-info"> (Please Upload 400px hight photo)</small></label>
                                     <input type="file" class="form-control" name="hover_image" id="hover_image">
                                     <span class="text-danger validate" data-field="hover_image"></span>
                                 </div>
@@ -228,7 +226,7 @@
                                 <div class="form-group">
                                     <label for="slug">Slug</label>
                                     <input type="text" class="form-control" readonly name="slug" id="slug"
-                                        placeholder="Enter Slug">
+                                        placeholder="Slug will be autometic generate">
 
                                     <span class="text-danger validate" data-field="slug"></span>
                                 </div>
@@ -300,12 +298,12 @@
                         <div class="col-12 d-flex">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="thumbnail_e">Product Thumbnail<small class="text-danger">(Please Upload 400px hight photo)</small></label>
+                                    <label for="thumbnail_e">Product Thumbnail<small class="text-info"> (Please Upload 400px hight photo)</small></label>
                                     <input type="file" class="form-control" name="thumbnail_e" id="thumbnail_e"
                                         placeholder="Enter Product thumbnail"
                                         value="">
 
-                                    <span class="text-danger validate" id="error_thumbnail_e"></span>
+                                    <span class="text-danger validate_e" data-field="thumbnail_e"></span>
                                 </div>
                                 <div>
                                     <img class="d-none" src="" id="previewThumbnail_e" width="200px" alt="">
@@ -314,9 +312,9 @@
 
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="hover_image_e">Product Hover Image <small class="text-danger">(Please Upload 400px hight photo)</small></label>
+                                    <label for="hover_image_e">Product Hover Image <small class="text-info"> (Please Upload 400px hight photo)</small></label>
                                     <input type="file" class="form-control" name="hover_image_e" id="hover_image_e">
-                                    <span class="text-danger validate" data-field="hover_image_e"></span>
+                                    <span class="text-danger validate_e" data-field="hover_image_e"></span>
                                 </div>
                                 <div>
                                     <img class="d-none" src="" id="hoverImage_e" width="180px" alt="">
@@ -327,25 +325,25 @@
                         <div class="col-12 d-flex">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="category_id">Category Name</label>
-                                    <select class="form-control select2 category_id" name="category_id" id="category_id_e" style="width: 100%" data-placeholder="Select Category">
+                                    <label for="category_id_e">Category Name</label>
+                                    <select class="form-control select2 category_id" name="category_id_e" id="category_id_e" style="width: 100%" data-placeholder="Select Category">
                                         <option value="" selected>Select Category</option>
                                         @foreach($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
                                     </select>
-                                    <span class="text-danger validate" data-field="category_id"></span>
+                                    <span class="text-danger validate_e" data-field="category_id_e"></span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="sub_category_id">Sub Category Name</label>
-                                    <select class="form-control select2" name="sub_category_id" id="sub_category_id_e"
+                                    <label for="sub_category_id_e">Sub Category Name</label>
+                                    <select class="form-control select2" name="sub_category_id_e" id="sub_category_id_e"
                                         style="width: 100%" data-placeholder="Select Subcategory">
                                         <option value="" selected>Select Subcategory</option>
                                     </select>
 
-                                    <span class="text-danger validate" data-field="sub_category_id"></span>
+                                    <span class="text-danger validate_e" data-field="sub_category_id_e"></span>
                                 </div>
                             </div>
                         </div>
@@ -354,20 +352,19 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="name_e">Product Name</label>
-                                    <input type="text" class="form-control" name="name" id="name_e"
-                                        placeholder="Enter Product Name" name="name"
-                                        value="" onkeyup="UpdateslugE()">
+                                    <input type="text" class="form-control" name="name_e" id="name_e"
+                                        placeholder="Enter Product Name" onkeyup="UpdateslugE()">
 
-                                    <span class="text-danger validate" id="error_name_e"></span>
+                                        <span class="text-danger validate_e" data-field="name_e"></span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="slug_e">Slug</label>
-                                    <input type="text" class="form-control" readonly name="slug" id="slug_e"
+                                    <input type="text" class="form-control" readonly name="slug_e" id="slug_e"
                                         placeholder="Enter Slug">
 
-                                    <span class="text-danger validate" id="error_slug_e"></span>
+                                        <span class="text-danger validate_e" data-field="slug_e"></span>
                                 </div>
                             </div>
                         </div>
@@ -375,17 +372,17 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="selling_price_e">Selling Price</label>
-                                    <input type="number" class="form-control" name="selling_price" id="selling_price_e"
+                                    <input type="number" class="form-control" name="selling_price_e" id="selling_price_e"
                                         placeholder="Enter Selling Price">
-                                    <span class="text-danger validate" id="error_selling_price_e"></span>
+                                    <span class="text-danger validate_e" data-field="selling_price_e"></span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="stock_e">Stock</label>
-                                    <input type="number" class="form-control" name="stock" id="stock_e"
+                                    <input type="number" class="form-control" name="stock_e" id="stock_e"
                                         placeholder="Add Stock">
-                                    <span class="text-danger validate" id="error_stock_e"></span>
+                                        <span class="text-danger validate_e" data-field="stock_e"></span>
                                 </div>
                             </div>
                         </div>
@@ -393,14 +390,14 @@
                             <div class="col-6">
                                 <div class="form-group">
                                         <label for="active_status_e">Active Status</label>
-                                        <select class="form-control select2" name="active_status" id="active_status_e"
+                                        <select class="form-control select2" name="active_status_e" id="active_status_e"
                                             data-placeholder="Select Active Status" style="width: 100%">
                                             <option selected>Choose Type</option>
                                             <option value="0">Inactive</option>
                                             <option value="1">Active</option>
                                         </select>
 
-                                        <span class="text-danger validate" id="error_active_status_e"></span>
+                                        <span class="text-danger validate_e" data-field="active_status_e"></span>
                                 </div>
                             </div>
                         </div>
@@ -561,6 +558,8 @@
             $('.editData').click(function (e) {
                 e.preventDefault();
                 $('#editmodal').modal('show');
+                $('.validate_e').text('');
+                
                 var category_id = $(this).data('category_id');
                 console.log(category_id);
                 var subcategory_id = $(this).data('sub_category_id');
@@ -594,9 +593,9 @@
                         }
                     },
                     error: function (error) {
-                        $('.validate').text('');
+                        $('.validate_e').text('');
                         $.each(error.responseJSON.errors, function (field_name, error) {
-                             const errorElement = $('.validate[data-field="' + field_name + '"]');
+                             const errorElement = $('.validate_e[data-field="' + field_name + '"]');
                              if (errorElement.length > 0) {
                                 errorElement.text(error[0]);
                                 toastr.error(error);

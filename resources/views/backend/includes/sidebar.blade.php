@@ -38,6 +38,31 @@
               </p>
             </a>
           </li>
+          <li class="nav-item {{ request()->is(['home-slider']) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{  request()->is(['home-slider']) ? 'active' : ''  }}">
+                <i class="nav-icon fas fa-home"></i>
+              <p>
+                Home Page
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('home-slider') }}" class="nav-link {{ request()->is(['home-slider']) ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Home Slider</p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Blog</p>
+                  </a>
+                </li>
+              </ul>
+          </li>
           <li class="nav-item {{ request()->is(['category', 'sub-category', 'products']) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{  request()->is(['category', 'sub-category', 'products']) ? 'active' : ''  }}">
                 <i class="nav-icon fas fa-parking"></i>

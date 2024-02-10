@@ -84,8 +84,7 @@
                                             class="btn btn-success btn-sm editData">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <a href="{{ url('delete-category/'. $category->id) }}"
-                                            id="delete" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                        <a href="{{ url('delete-category/'. $category->id) }}" id="delete" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
 
                                     </td>
                                 </tr>
@@ -170,30 +169,30 @@
                     <div class="modal-body">
                         <input type="text" id="id_e" name="id_e" hidden>
                         <div class="form-group">
-                            <label for="categoryName">Category Name</label>
-                            <input type="text" class="form-control" name="categoryName" id="categoryName_e"
+                            <label for="categoryName_e">Category Name</label>
+                            <input type="text" class="form-control" name="categoryName_e" id="categoryName_e"
                                 placeholder="Enter Category Name" onkeyup="UpdateslugE()">
 
-                            <span class="text-danger validate" data-field="categoryName"></span>
+                            <span class="text-danger validate_e" data-field="categoryName_e"></span>
                         </div>
 
                         <div class="form-group">
-                            <label for="slug">Category Slug</label>
-                            <input type="text" class="form-control" readonly name="slug" id="slug_e"
+                            <label for="slug_e">Category Slug</label>
+                            <input type="text" class="form-control" readonly name="slug_e" id="slug_e"
                                 placeholder="Slug Here..." >
 
-                            <span class="text-danger validate" data-field="slug"></span>
+                            <span class="text-danger validate_e" data-field="slug_e"></span>
                         </div>
 
                         <div class="form-group">
-                            <label for="active_status">Active Status</label>
-                            <select class="form-control select2" name="active_status" id="active_status_e"
+                            <label for="active_status_e">Active Status</label>
+                            <select class="form-control select2" name="active_status_e" id="active_status_e"
                                 data-placeholder="Select Active Status" style="width: 100%">
                                 <option value="">Choose Type</option>
                                 <option value="0">Inactive</option>
                                 <option value="1">Active</option>
                             </select>
-                            <span class="text-danger validate" data-field="active_status"></span>
+                            <span class="text-danger validate_e" data-field="active_status_e"></span>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -336,6 +335,8 @@
             $('.editData').click(function (e) {
                 e.preventDefault();
                 $('#editmodal').modal('show');
+                $('.validate_e').text('');
+
                 $('#id_e').val($(this).data('id'));
                 $('#categoryName_e').val($(this).data('name'));
                 $('#slug_e').val($(this).data('slug'));
@@ -361,9 +362,9 @@
                         }
                     },
                     error: function (error) {
-                        $('.validate').text('');
+                        $('.validate_e').text('');
                         $.each(error.responseJSON.errors, function (field_name, error) {
-                             const errorElement = $('.validate[data-field="' + field_name + '"]');
+                             const errorElement = $('.validate_e[data-field="' + field_name + '"]');
                              if (errorElement.length > 0) {
                                 errorElement.text(error[0]);
                                 toastr.error(error);
