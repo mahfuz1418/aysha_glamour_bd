@@ -20,8 +20,9 @@ class HomePageController extends Controller
     }
 
     //SHORT DESCRIPTION
-    public function productDetails()
+    public function productDetails($id)
     {
-        return view('frontend.product_details.product_details');
+        $data['product'] = Product::findOrFail($id);
+        return view('frontend.product_details.product_details', $data);
     }
 }

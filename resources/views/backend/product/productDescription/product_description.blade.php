@@ -40,71 +40,71 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header">Products Description</div>
-                <div class="card-body">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col" style="width: 5%">Serial</th>
-                                <th scope="col" style="width: 40%">Content</th>
-                                <th scope="col" style="width: 8%">Active Status</th>
-                                <th scope="col" style="width: 10%">Add Date</th>
-                                <th scope="col" style="width: 10%">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $serials = ($productDescriptions->currentpage() - 1) * $productDescriptions->perpage() +
-                                1;
-                            @endphp
-                            @foreach($productDescriptions as $detail)
-                                <tr>
-                                    <th scope="row">{{ $serials++ }}</th>
-                                    <td>{!! Str::words($detail->content, 20, '....')  !!}
-                                        @if (Str::of($detail->content)->wordCount() > 20)
-                                           <a  class="editdes" style="cursor: pointer;" data-description="{{ $detail ->content }}">
-                                               See More
-                                           </a>
-                                       @endif
-                                    </td>
-                                    <td>
-                                        <span
-                                            class="badge badge-{{ $detail->active_status == 0 ? 'danger': 'success' }}">{{ $detail->active_status == 0 ? 'Inactive': 'Active' }}</span>
-                                    </td>
-                                    <td>{{ $detail->created_at->format('d/m/Y') }}</td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button type="button"
-                                                class="btn btn-primary btn-sm rounded-pill btn-rounded dropdown-toggle"
-                                                data-toggle="dropdown">
-                                                Options
-                                            </button>
-                                            <div class="dropdown-menu text-center bg-light-blue">
+                    <div class="card">
+                        <div class="card-header">Products Description</div>
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 5%">Serial</th>
+                                        <th scope="col" style="width: 40%">Content</th>
+                                        <th scope="col" style="width: 10%">Active Status</th>
+                                        <th scope="col" style="width: 10%">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $serials = ($productDescriptions->currentpage() - 1) * $productDescriptions->perpage() + 1;
+                                    @endphp
+                                    @foreach($productDescriptions as $detail)
+                                        <tr>
+                                            <th scope="row">{{ $serials++ }}</th>
+                                            <td>
+                                                {!! Str::words($detail->content, 40, ' .... ')  !!}
+                                                @if (Str::of($detail->content)->wordCount() > 40)
+                                                   <a class="showdes" style="cursor: pointer;" data-description="{{ $detail ->content }}">
+                                                    See More
+                                                    </a>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <span
+                                                    class="badge badge-{{ $detail->active_status == 0 ? 'danger': 'success' }}">{{ $detail->active_status == 0 ? 'Inactive': 'Active' }}</span>
+                                            </td>
+                                            <td>
+                                                <div class="dropdown">
+                                                    <button type="button"
+                                                        class="btn btn-primary btn-sm rounded-pill btn-rounded dropdown-toggle"
+                                                        data-toggle="dropdown">
+                                                        Options
+                                                    </button>
+                                                    <div class="dropdown-menu text-center bg-light-blue">
 
-                                                <a data-toggle="modal" data-target="#editNew"
-                                                    class="btn btn-info btn-sm btn-block editDetail"
+                                                        <a data-toggle="modal" data-target="#editNew"
+                                                            class="btn btn-info btn-sm btn-block editDetail"
 
-                                                    data-id="{{ $detail->id }}"
-                                                    data-content="{{ $detail->content }}"
-                                                    data-active_status="{{ $detail->active_status }}"> <i class="fas fa-edit"></i> Edit</a>
+                                                            data-id="{{ $detail->id }}"
+                                                            data-content="{{ $detail->content }}"
+                                                            data-active_status="{{ $detail->active_status }}"> <i class="fas fa-edit"></i> Edit</a>
 
-                                                <a href="{{ url('delete-Description/'. $detail->id) }}"
-                                                    id="delete" class="btn btn-danger btn-sm btn-block"><i
-                                                        class="fas fa-trash"></i> Delete</a>
+                                                        <a href="{{ url('delete-Description/'. $detail->id) }}"
+                                                            id="delete" class="btn btn-danger btn-sm btn-block"><i
+                                                                class="fas fa-trash"></i> Delete</a>
 
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <div class="float-right my-2">
-                        {{ $productDescriptions->links() }}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <div class="float-right my-2">
+                                {{ $productDescriptions->links() }}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+
         </div>
     </section>
 </div>
@@ -152,7 +152,7 @@
     <!-- /.modal-dialog -->
 </div>
   <!-- /.modal -->
-{{-- edit form  --}}
+<!-- edit form  -->
   <div class="modal fade" id="editNew">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -163,12 +163,12 @@
           </button>
         </div>
         <form id="editData">
-            <input type="" name="id" id="id_e">
-            <input type="" name="product_id" value="{{ $product->id }}">
+            <input type="hidden" name="product_id" value="{{ $product->id }}">
+            <input type="hidden" name="id_e" id="id_e">
             <div class="modal-body">
                 <div class="form-group">
                     <label for="active_status_e">Active Status</label>
-                    <select class="form-control select2" name="active_status" id="active_status_e"
+                    <select class="form-control select2" name="active_status_e" id="active_status_e"
                         data-placeholder="Select Active Status" style="width: 100%">
                         <option value="">Choose Type</option>
                         <option value="0">Inactive</option>
@@ -180,9 +180,8 @@
 
                 <div class="form-group">
                     <label for="content_e">Content</label>
-                    <textarea type="text" class="form-control" name="content" id="editor_e"  > </textarea>
+                    <textarea type="text" class="form-control" name="content_e" id="content_e"  > </textarea>
                     <span class="text-danger validate_e" data-field="content"></span>
-
                 </div>
 
             </div>
@@ -199,7 +198,7 @@
   <!-- /.modal -->
 
 
-  {{-- show Description  --}}
+{{-- show Description  --}}
 <div class="modal fade" id="showdes" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -239,6 +238,8 @@
     </script> --}}
 
     <script>
+
+
         $(document).ready(function () {
             // STORE PRODUCT DESCRIPTION
             $("#formData").submit(function(e) {
@@ -268,24 +269,29 @@
                              }
                         });
                     },
-                    // complete: function(done) {
-                    //     if (done.status == 200) {
-                    //         window.location.reload();
-                    //     }
-                    // }
+                    complete: function(done) {
+                        if (done.status == 200) {
+                            window.location.reload();
+                        }
+                    }
 
                 });
             });
 
+            $('.showdes').click(function (e) {
+                e.preventDefault();
+                $('#showdes').modal('show');
+                $("#description").html($(this).data('description'));
+            });
+
             // SHOW DATA WHEN CLICK ON EDIT BUTTON
-            // $('.editData').click(function (e) {
-            //     e.preventDefault();
-            //     $('#editmodal').modal('show');
-            //     $('#id_e').val($(this).data('id'));
-            //     $('#categoryName_e').val($(this).data('name'));
-            //     $('#slug_e').val($(this).data('slug'));
-            //     $('#active_status_e').val($(this).data('active_status')).trigger('change');
-            // });
+            $('.editDetail').click(function (e) {
+                e.preventDefault();
+                $('#editmodal').modal('show');
+                $('#id_e').val($(this).data('id'));
+                $('#content_e').summernote('code', $(this).data('content'))
+                $('#active_status_e').val($(this).data('active_status')).trigger('change');
+            });
 
             // EDIT PRODUCT DESCRIPTION
             // $("#updateData").submit(function(e) {
@@ -325,15 +331,16 @@
             // });
         });
     </script>
-
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('#summernote').summernote({
-                height: 200
+            $(document).ready(function() {
+                $('#summernote').summernote({
+                    height: 200
+                });
+                $('#content_e').summernote({
+                    height: 200
+                });
             });
-        });
     </script>
-
     @if (Session::has('message'))
         <script>
             toastr.success("{{ Session::get('message') }}");

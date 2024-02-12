@@ -57,7 +57,7 @@
                                                     <!-- start product image -->
                                                     <div class="product-image">
                                                         <!-- start product image -->
-                                                        <a href="{{ route('product-details') }}">
+                                                        <a href="{{ route('product-details',['id' => $product->id]) }}">
                                                             <!-- image -->
                                                             <img class="primary blur-up lazyload" style="height: 350px; background-size:fit" src="{{ asset($product->thumbnail) }}" alt="image" title="product">
                                                             <!-- End image -->

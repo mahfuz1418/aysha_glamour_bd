@@ -38,6 +38,7 @@
     @include('frontend.includes.header')
 	<!--End Mobile Menu-->
 
+
     <!--Body Content-->
         @yield('section')
     <!--End Body Content-->
