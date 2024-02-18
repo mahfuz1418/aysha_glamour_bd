@@ -41,7 +41,15 @@
             </div>
 
                     <div class="card">
-                        <div class="card-header">Products Description</div>
+                        <div class="card-header d-flex">
+                            <div class="card-header">Products Description</div>
+                            <div class="ml-auto">
+                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter">
+                                    <i class="fas fa-recycle"></i> Recycle Bin
+                                  </button>
+                            </div>
+                        </div>
+
                         <div class="card-body">
                             <table class="table table-bordered">
                                 <thead>
@@ -87,7 +95,7 @@
                                                             data-content="{{ $detail->content }}"
                                                             data-active_status="{{ $detail->active_status }}"> <i class="fas fa-edit"></i> Edit</a>
 
-                                                        <a href="{{ url('delete-Description/'. $detail->id) }}"
+                                                        <a href="{{ url('delete-product-description/'. $detail->id) }}"
                                                             id="delete" class="btn btn-danger btn-sm btn-block"><i
                                                                 class="fas fa-trash"></i> Delete</a>
 
@@ -162,7 +170,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form id="editData">
+        <form id="updateData">
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             <input type="hidden" name="id_e" id="id_e">
             <div class="modal-body">
@@ -174,14 +182,14 @@
                         <option value="0">Inactive</option>
                         <option value="1">Active</option>
                     </select>
-                    <span class="text-danger validate_e" data-field="active_status"></span>
+                    <span class="text-danger validate_e" data-field="active_status_e"></span>
 
                 </div>
 
                 <div class="form-group">
                     <label for="content_e">Content</label>
                     <textarea type="text" class="form-control" name="content_e" id="content_e"  > </textarea>
-                    <span class="text-danger validate_e" data-field="content"></span>
+                    <span class="text-danger validate_e" data-field="content_e"></span>
                 </div>
 
             </div>
@@ -224,18 +232,62 @@
         </div>
     </div>
 </div>
+
+    <!-- Recycle Bin -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Recycle Bin</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <a href="{{ route('restore-all-product-description') }}" class="btn btn-info mr-1"><i class="fas fa-recycle"></i> Restore All</a>
+                <a href="{{ route('force-delete-all-product-description') }}" class="btn btn-danger"><i class="fas fa-trash"></i> Delete All</a>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Content</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                        @forelse ($trashProductDescription as $item)
+                            <tr>
+                                <th scope="row">{{ $loop->iteration }}</th>
+                                <td>{!! Str::words($item->content, 30, ' .... ')  !!}</td>
+                                <td>
+                                    <a href="{{ url('restore-product-description/'. $item->id) }}" class="btn btn-info btn-sm"><i class="fas fa-recycle"></i>
+                                    </a>
+                                    <a href="{{ url('force-delete-product-description/'. $item->id) }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="10" class="text-center text-danger font-italic font-weight-bold">Empty Recycle Bin</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                  </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 @endsection
 
 @section('script')
 
-    {{-- CLEAR TEXT BY CLICKING BUTTON  --}}
-    {{-- <script>
-        document.querySelector('.myCategory').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelector('#categoryName').value = "";
-            document.querySelector('#slug').value = "";
-        });
-    </script> --}}
 
     <script>
 
@@ -294,41 +346,41 @@
             });
 
             // EDIT PRODUCT DESCRIPTION
-            // $("#updateData").submit(function(e) {
-            //     e.preventDefault();
-            //     var formdata = new FormData($("#updateData")[0]);
-            //     $.ajax({
-            //         type: "POST",
-            //         url: "{{ route('edit-category') }}",
-            //         contentType: false,
-            //         processData: false,
-            //         headers: {
-            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //         },
-            //         data: formdata,
-            //         success: function(response) {
-            //             if (response.success) {
-            //                 toastr.success(response.success);
-            //             }
-            //         },
-            //         error: function (error) {
-            //             $('.validate').text('');
-            //             $.each(error.responseJSON.errors, function (field_name, error) {
-            //                  const errorElement = $('.validate[data-field="' + field_name + '"]');
-            //                  if (errorElement.length > 0) {
-            //                     errorElement.text(error[0]);
-            //                     toastr.error(error);
-            //                  }
-            //             });
-            //         },
-            //         complete: function(done) {
-            //             if (done.status == 200) {
-            //                 window.location.reload();
-            //             }
-            //         }
+            $("#updateData").submit(function(e) {
+                e.preventDefault();
+                var formdata = new FormData($("#updateData")[0]);
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('edit-product-description') }}",
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: formdata,
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.success);
+                        }
+                    },
+                    error: function (error) {
+                        $('.validate').text('');
+                        $.each(error.responseJSON.errors, function (field_name, error) {
+                             const errorElement = $('.validate_e[data-field="' + field_name + '"]');
+                             if (errorElement.length > 0) {
+                                errorElement.text(error[0]);
+                                toastr.error(error);
+                             }
+                        });
+                    },
+                    complete: function(done) {
+                        if (done.status == 200) {
+                            window.location.reload();
+                        }
+                    }
 
-            //     });
-            // });
+                });
+            });
         });
     </script>
     <script type="text/javascript">

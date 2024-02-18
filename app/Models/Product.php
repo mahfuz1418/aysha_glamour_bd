@@ -12,7 +12,7 @@ class Product extends Model
     use HasFactory, SoftDeletes;
     protected $guarded = [];
 
-    // no need relation, bcz direct name in database 
+    // no need relation, bcz direct name in database
     // public function category(): BelongsTo
     // {
     //     return $this->belongsTo(Category::class, 'category_id');

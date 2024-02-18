@@ -10,8 +10,6 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1 class="m-0">Products</h1>
-
-
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -60,13 +58,13 @@
                                     <th scope="col" style="width: 10%">Thumbnail</th>
                                     <th scope="col" style="width: 10%">Hover Image</th>
                                     <th scope="col" style="width: 10%">Product Name</th>
-                                    <th scope="col" style="width: 10%">Category</th>
-                                    <th scope="col" style="width: 10%">Subcategory</th>
-                                    <th scope="col" style="width: 10%">Slug</th>
+                                    <th scope="col" style="width: 5%">Category</th>
+                                    <th scope="col" style="width: 5%">Subcategory</th>
                                     <th scope="col" style="width: 5%">Price</th>
+                                    <th scope="col" style="width: 10%">Sizes</th>
+                                    <th scope="col" style="width: 10%">Colors</th>
                                     <th scope="col" style="width: 5%">Stock</th>
-                                    <th scope="col" style="width: 10%">Active Status</th>
-                                    <th scope="col" style="width: 5%">Pin Status</th>
+                                    <th scope="col" style="width: 5%">Active & Pin Status</th>
                                     <th scope="col" style="width: 10%">Action</th>
                                 </tr>
                             </thead>
@@ -87,14 +85,19 @@
                                         <td>{{ $product->name }}</td>
                                         <td>{{ $product->category_name }}</td>
                                         <td>{{ $product->sub_category_name }}</td>
-                                        <td>{{ $product->slug }}</td>
                                         <td>{{ $product->selling_price }} $</td>
-                                        <td>{{ $product->stock }}</td>
-                                        <td><span class="badge badge-{{ $product->active_status == 0 ? 'danger': 'success' }}">{{ $product->active_status == 0 ? 'Inactive': 'Active' }}</span>
+                                        <td>
+
                                         </td>
                                         <td>
+
+                                        </td>
+                                        <td>{{ $product->stock }}</td>
+                                        <td>
+                                            <span class="badge badge-{{ $product->active_status == 0 ? 'danger': 'success' }}">{{ $product->active_status == 0 ? 'Inactive': 'Active' }} </span>
                                             <span class="badge badge-{{ $product->pinned == 0 ? 'danger': 'success' }}">{{ $product->pinned == 0 ? 'Unpinned': 'Pinned' }}</span>
                                         </td>
+
                                         <td>
                                             <div class="dropdown">
                                                 <button type="button"
@@ -110,6 +113,8 @@
                                                         data-sub_category_id="{{ $product->sub_category_id }}"
                                                         data-slug="{{ $product->slug }}"
                                                         data-selling_price="{{ $product->selling_price }}"
+                                                        data-sizes="{{ $product->sizes }}"
+                                                        data-colors="{{ $product->colors }}"
                                                         data-active_status="{{ $product->active_status }}"
                                                         class="btn btn-success btn-sm editData myProduct btn-block">
                                                         <i class="fas fa-edit"></i> Edit
@@ -187,7 +192,7 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="category_id">Category Name</label>
-                                    <select class="form-control select2 category_id" name="category_id" id="category_id"
+                                    <select class="form-control category_id" name="category_id" id="category_id"
                                         style="width: 100%" data-placeholder="Select Category">
                                         <option value="" selected>Select Category</option>
                                         @foreach($categories as $category)
@@ -200,7 +205,7 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="sub_category_id">Sub Category Name</label>
-                                    <select class="form-control select2" name="sub_category_id" id="sub_category_id"
+                                    <select class="form-control" name="sub_category_id" id="sub_category_id"
                                         style="width: 100%" data-placeholder="Select Subcategory">
                                         <option value="" selected>Select Subcategory</option>
                                     </select>
@@ -253,11 +258,41 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Select Sizes</label>
+                                    <div class="select2-purple">
+                                      <select class="select2" multiple="multiple" data-placeholder="Select Sizes" data-dropdown-css-class="select2-purple" name="sizes[]" style="width: 100%;">
+                                        @foreach ($sizes as $size)
+                                            <option value="{{ $size->id }}"><p class="text-uppercase">{{ $size->size }}</p></option>
+                                        @endforeach
+                                      </select>
+                                    <span class="text-danger validate" data-field="sizes"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Select Colors</label>
+                                    <div class="select2-purple">
+                                      <select class="select2" multiple="multiple" data-placeholder="Select Colors" data-dropdown-css-class="select2-purple" name="colors[]" style="width: 100%;">
+                                        @foreach ($colors as $color)
+                                        <option value="{{ $color->id }}">{{ $color->color }}</option>
+                                    @endforeach
+                                      </select>
+                                    <span class="text-danger validate" data-field="colors"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                         <div class="col-12">
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="active_status">Active Status</label>
-                                    <select class="form-control select2" name="active_status" id="active_status"
+                                    <select class="form-control" name="active_status" id="active_status"
                                         data-placeholder="Select Active Status" style="width: 100%">
                                         <option selected>Choose Type</option>
                                         <option value="0">Inactive</option>
@@ -326,7 +361,7 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="category_id_e">Category Name</label>
-                                    <select class="form-control select2 category_id" name="category_id_e" id="category_id_e" style="width: 100%" data-placeholder="Select Category">
+                                    <select class="form-control category_id" name="category_id_e" id="category_id_e" style="width: 100%" data-placeholder="Select Category">
                                         <option value="" selected>Select Category</option>
                                         @foreach($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -338,7 +373,7 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="sub_category_id_e">Sub Category Name</label>
-                                    <select class="form-control select2" name="sub_category_id_e" id="sub_category_id_e"
+                                    <select class="form-control" name="sub_category_id_e" id="sub_category_id_e"
                                         style="width: 100%" data-placeholder="Select Subcategory">
                                         <option value="" selected>Select Subcategory</option>
                                     </select>
@@ -389,8 +424,38 @@
                         <div class="col-12 d-flex">
                             <div class="col-6">
                                 <div class="form-group">
+                                    <label>Select Sizes</label>
+                                    <div class="select2-purple">
+                                      <select class="select2" multiple="multiple" data-placeholder="Select Sizes" data-dropdown-css-class="select2-purple" id="sizes_e" name="sizes_e[]" style="width: 100%;">
+                                        @foreach ($sizes as $size)
+                                            <option {{ $size->id == '3' ? 'selected' : '' }} value="{{ $size->id }}">{{ $size->size }}</option>
+                                        @endforeach
+                                      </select>
+                                    <span class="text-danger validate_e" data-field="sizes_e"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Select Colors</label>
+                                    <div class="select2-purple">
+                                      <select class="select2" multiple="multiple" data-placeholder="Select Colors" data-dropdown-css-class="select2-purple" id="colors_e" name="colors_e[]" style="width: 100%;">
+                                        @foreach ($colors as $color)
+                                            <option {{ $color === '3' ? 'selected' : '' }} value="{{ $color->id }}">{{ $color->color }}</option>
+                                        @endforeach
+                                      </select>
+                                    <span class="text-danger validate_e" data-field="colors_e"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-12 d-flex">
+                            <div class="col-6">
+                                <div class="form-group">
                                         <label for="active_status_e">Active Status</label>
-                                        <select class="form-control select2" name="active_status_e" id="active_status_e"
+                                        <select class="form-control" name="active_status_e" id="active_status_e"
                                             data-placeholder="Select Active Status" style="width: 100%">
                                             <option selected>Choose Type</option>
                                             <option value="0">Inactive</option>
@@ -559,7 +624,7 @@
                 e.preventDefault();
                 $('#editmodal').modal('show');
                 $('.validate_e').text('');
-                
+
                 var category_id = $(this).data('category_id');
                 console.log(category_id);
                 var subcategory_id = $(this).data('sub_category_id');
@@ -567,10 +632,12 @@
                 getSubcategory(category_id, subcategory_id);
 
                 $('#id_e').val($(this).data('id'));
-                $('#name_e').val($(this).data('name'));
+                $('#name_e').val($(this).data('sizes'));
                 $('#slug_e').val($(this).data('slug'));
                 $('#selling_price_e').val($(this).data('selling_price'));
                 $('#stock_e').val($(this).data('stock'));
+                // $('#sizes_e').val($(this).data('sizes')).trigger('change');
+                // $('#colors_e').val($(this).data('colors')).trigger('change');
                 $('#active_status_e').val($(this).data('active_status')).trigger('change');
             });
 
@@ -659,6 +726,17 @@
         });
     </script>
 
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
+        })
+    </script>
     @if (Session::has('message'))
     <script>
         toastr.success("{{ Session::get('message') }}");

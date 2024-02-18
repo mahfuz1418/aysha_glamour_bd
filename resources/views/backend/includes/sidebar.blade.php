@@ -63,8 +63,8 @@
                 </li>
               </ul>
           </li>
-          <li class="nav-item {{ request()->is(['category', 'sub-category', 'products']) ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{  request()->is(['category', 'sub-category', 'products']) ? 'active' : ''  }}">
+          <li class="nav-item {{ request()->is(['category', 'sub-category', 'products', 'sizes-colors']) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{  request()->is(['category', 'sub-category', 'products', 'sizes-colors']) ? 'active' : ''  }}">
                 <i class="nav-icon fas fa-parking"></i>
               <p>
                 Product Management
@@ -82,6 +82,12 @@
                 <a href="{{ route('sub-category') }}" class="nav-link {{ request()->is(['sub-category']) ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Sub Category</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('sizes-colors') }}" class="nav-link {{ request()->is(['sizes-colors']) ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Sizes & Colors</p>
                 </a>
               </li>
               <li class="nav-item">

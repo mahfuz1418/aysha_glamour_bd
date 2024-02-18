@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeSliderController;
+use App\Http\Controllers\ImageColorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SizeColorController;
 use App\Http\Controllers\SubCategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -61,9 +63,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/update-pin-status/{id}/{status}', [ProductController::class, 'updatePinStatus'])->name('update-pin-status');
     // Get Sub Category
     Route::get('/get-subcategory-ajax', [ProductController::class, 'getSubcategoryAjax'])->name('get-subcategory');
+
+    // sizes & Colors
+    Route::get('/sizes-colors', [SizeColorController::class, 'index'])->name('sizes-colors');
+    Route::post('/add-sizes', [SizeColorController::class, 'addSizes'])->name('add-sizes');
+    Route::get('/delete-size/{id}', [SizeColorController::class, 'deleteSize'])->name('delete-size');
+    Route::post('/add-colors', [SizeColorController::class, 'addColors'])->name('add-colors');
+    Route::get('/delete-color/{id}', [SizeColorController::class, 'deleteColor'])->name('delete-color');
+
     // Product Description
     Route::get('/product-description/{id}', [ProductController::class, 'productDescriptionIndex'])->name('product-description');
     Route::post('/store-product-description', [ProductController::class, 'storeProductDescription'])->name('store-product-description');
+    Route::post('/edit-product-description', [ProductController::class, 'editProductDescription'])->name('edit-product-description');
+    Route::get('/delete-product-description/{id}', [ProductController::class, 'deleteProductDescription'])->name('delete-product-description');
+    Route::get('/restore-product-description/{id}', [ProductController::class, 'resotoreProductDescription'])->name('restore-product-description');
+    Route::get('/restore-all-product-description', [ProductController::class, 'resotoreAllProductDescription'])->name('restore-all-product-description');
+    Route::get('/force-delete-product-description/{id}', [ProductController::class, 'forceDeleteProductDescription'])->name('force-delete-product-description');
+    Route::get('/force-delete-all-product-description', [ProductController::class, 'forceDeleteAllProductDescription'])->name('force-delete-all-product-description');
 
     // Home Page
     Route::get('/home-slider', [HomeSliderController::class, 'index'])->name('home-slider');

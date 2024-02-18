@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductDescription;
+use App\Models\Size;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +22,8 @@ class ProductController extends Controller
         $data['categories'] = Category::get();
         $data['products'] = Product::paginate(10);
         $data['trashProducts'] = Product::onlyTrashed()->get();
+        $data['sizes'] = Size::get();
+        $data['colors'] = Color::get();
         return view('backend.product.product', $data);
     }
 
@@ -32,7 +36,9 @@ class ProductController extends Controller
                 'hover_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
                 'category_id' => 'required|numeric',
                 'sub_category_id' => 'required|numeric',
-                'name' => 'required|string|max:255',
+                // 'name' => 'required|string|max:255',
+                // 'colors' => 'max:255',
+                'sizes' => 'max:255',
                 'slug' => "required|string|max:255|unique:products,slug",
                 'selling_price' => 'required|numeric',
                 'stock' => 'required|numeric',
@@ -43,14 +49,13 @@ class ProductController extends Controller
                 'hover_image.required' => 'Please Choose a Hover Image',
                 'category_id.required' => 'Product Category Is Required',
                 'sub_category_id.required' => 'Product Subcategory Is Required',
-                'name.required' => 'Product Name Is Required',
-                'slug.required' => 'Product Slug Is Required',
+                // 'name.required' => 'Product Name Is Required',
+                // 'slug.required' => 'Product Slug Is Required',
                 'selling_price.required' => 'Product Selling Price Is Required',
                 'stock.required' => 'Stock Is Required',
                 'active_status.required' => 'Product Active Status Is Required',
             ],
         );
-
         $image = '';
         if ($request->file('thumbnail')) {
             $image = uploadPlease($request->file('thumbnail'));
@@ -76,6 +81,12 @@ class ProductController extends Controller
         $product->thumbnail = $image;
         $product->hover_image = $image1;
         $product->created_by = Auth::id();
+
+        // $sizes = implode(',', $request->sizes);
+        $product->sizes = $request->sizes;
+        // $colors = implode(',', $request->colors);
+        $product->colors = $request->colors;
+
         $product->save();
 
         if ($product) {
@@ -282,6 +293,7 @@ class ProductController extends Controller
     public function productDescriptionIndex($id)
     {
        $data['product'] = Product::findOrFail($id);
+       $data['trashProductDescription'] = ProductDescription::onlyTrashed()->get();
        $data['productDescriptions'] = ProductDescription::where('product_id', $id)->paginate(10);
        return view('backend.product.productDescription.product_description', $data);
     }
@@ -317,6 +329,76 @@ class ProductController extends Controller
                'success' => 'Something Failed',
            ]);
        }
+    }
+
+
+    public function editProductDescription(Request $request)
+    {
+       $request->validate(
+           [
+               'product_id' => 'required|integer',
+               'active_status_e' => 'required|integer',
+               'content_e' => 'required|string',
+           ],
+           [
+               'product_id.required' => 'Required',
+               'active_status_e.required' => 'Active Status Is Required',
+               'content_e.required' => 'Please Write Or Past The Content',
+           ],
+       );
+
+       $productDes = ProductDescription::findOrFail($request->id_e);
+       $productDes->product_id = $request->product_id;
+       $productDes->active_status = $request->active_status_e;
+       $productDes->content = $request->content_e;
+       $productDes->updated_by = Auth::id();
+       $productDes->save();
+
+       if ($productDes) {
+           return response()->json([
+               'success' => 'Product Description Updated Successfully',
+           ]);
+       } else {
+           return response()->json([
+               'success' => 'Something Wrong',
+           ]);
+       }
+    }
+
+    //DELETE PRODUCT DESCRIPTION
+    public function deleteProductDescription($id)
+    {
+        $slider = ProductDescription::findOrFail($id)->delete();
+        return redirect()->back();
+    }
+
+    //RESTORE PRODUCT DESCRIPTION
+    public function resotoreProductDescription($id)
+    {
+        ProductDescription::onlyTrashed()->find($id)->restore();
+        return back()->with('message', 'Product Description Restored Successfully');
+    }
+
+    //RESTORE ALL PRODUCT DESCRIPTION
+    public function resotoreAllProductDescription()
+    {
+        ProductDescription::onlyTrashed()->where('deleted_at', '!=' , null)->restore();
+        return back()->with('message', 'All Product Description Restored Successfully');
+    }
+
+    // FORCE DELETE PRODUCT DESCRIPTION
+    public function forceDeleteProductDescription($id)
+    {
+        $slider = ProductDescription::onlyTrashed()->find($id);
+        $slider->forceDelete();
+        return back()->with('message', 'Product Description Deleted Permanently');
+    }
+
+    // FORCE DELETE ALL PRODUCT DESCRIPTION
+    public function forceDeleteAllProductDescription()
+    {
+        $trushSlider = ProductDescription::onlyTrashed()->where('deleted_at', '!=' , null)->forceDelete();
+        return back()->with('message', 'All Product Description Permanently Deleted');
     }
 
 

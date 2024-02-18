@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('sub_category_name');
             $table->string('thumbnail');
             $table->string('hover_image');
+            $table->string('sizes')->nullable();
+            $table->string('colors')->nullable();
             $table->boolean('pinned')->default(0);
             $table->decimal('selling_price', 10,2);
             $table->integer('stock');
