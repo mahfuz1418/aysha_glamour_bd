@@ -53,6 +53,7 @@ Route::middleware('auth')->group(function () {
 
     // Product
     Route::get('/products', [ProductController::class, 'index'])->name('products');
+    Route::get('/add-product', [ProductController::class, 'addProduct'])->name('add-product');
     Route::post('/store-product', [ProductController::class, 'storeProduct'])->name('store-product');
     Route::post('/edit-product', [ProductController::class, 'editProduct'])->name('edit-product');
     Route::get('/delete-product/{id}', [ProductController::class, 'deleteProduct'])->name('delete-product');
@@ -61,8 +62,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/force-delete-product/{id}', [ProductController::class, 'forceDeleteProduct'])->name('force-delete-product');
     Route::get('/force-delete-all-product', [ProductController::class, 'forceDeleteAllProduct'])->name('force-delete-all-product');
     Route::get('/update-pin-status/{id}/{status}', [ProductController::class, 'updatePinStatus'])->name('update-pin-status');
-    // Get Sub Category
+    // Get Sub Category and sizes
     Route::get('/get-subcategory-ajax', [ProductController::class, 'getSubcategoryAjax'])->name('get-subcategory');
+    Route::get('/get-sizes-ajax', [ProductController::class, 'getSizesAjax'])->name('get-sizes');
 
     // sizes & Colors
     Route::get('/sizes-colors', [SizeColorController::class, 'index'])->name('sizes-colors');
@@ -70,16 +72,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/delete-size/{id}', [SizeColorController::class, 'deleteSize'])->name('delete-size');
     Route::post('/add-colors', [SizeColorController::class, 'addColors'])->name('add-colors');
     Route::get('/delete-color/{id}', [SizeColorController::class, 'deleteColor'])->name('delete-color');
-
-    // Product Description
-    Route::get('/product-description/{id}', [ProductController::class, 'productDescriptionIndex'])->name('product-description');
-    Route::post('/store-product-description', [ProductController::class, 'storeProductDescription'])->name('store-product-description');
-    Route::post('/edit-product-description', [ProductController::class, 'editProductDescription'])->name('edit-product-description');
-    Route::get('/delete-product-description/{id}', [ProductController::class, 'deleteProductDescription'])->name('delete-product-description');
-    Route::get('/restore-product-description/{id}', [ProductController::class, 'resotoreProductDescription'])->name('restore-product-description');
-    Route::get('/restore-all-product-description', [ProductController::class, 'resotoreAllProductDescription'])->name('restore-all-product-description');
-    Route::get('/force-delete-product-description/{id}', [ProductController::class, 'forceDeleteProductDescription'])->name('force-delete-product-description');
-    Route::get('/force-delete-all-product-description', [ProductController::class, 'forceDeleteAllProductDescription'])->name('force-delete-all-product-description');
 
     // Home Page
     Route::get('/home-slider', [HomeSliderController::class, 'index'])->name('home-slider');
@@ -90,8 +82,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/restore-all-slider', [HomeSliderController::class, 'resotoreAllSlider'])->name('restore-all-slider');
     Route::get('/force-delete-slider/{id}', [HomeSliderController::class, 'forceDeleteSlider'])->name('force-delete-slider');
     Route::get('/force-delete-all-slider', [HomeSliderController::class, 'forceDeleteAllSlider'])->name('force-delete-all-slider');
-
-
 
 
 });

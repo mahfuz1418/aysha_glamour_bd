@@ -38,6 +38,9 @@
   <link rel="stylesheet" href="{{ asset('backend/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
   <!-- Bootstrap Color Picker -->
   <link rel="stylesheet" href="{{ asset('backend/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}">
+  @yield('style')
+  <!-- Dropify -->
+  <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -69,14 +72,15 @@
 
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
 
 <!-- jQuery -->
-<script src="{{ asset('backend/plugins/jquery/jquery.min.js') }}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{{-- <script src="{{ asset('backend/plugins/jquery/jquery.min.js') }}"></script> --}}
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('backend/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -117,6 +121,8 @@
 <script src="{{ asset('backend/plugins/select2/js/select2.full.min.js') }}"></script>
 <!-- bootstrap color picker -->
 <script src="{{ asset('backend/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js') }}"></script>
+<!-- Dropify -->
+<script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 <!-- Pre Loader -->
 <script>
     $(document).ready(function () {

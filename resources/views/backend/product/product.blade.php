@@ -125,8 +125,6 @@
                                                     @else
                                                         <a href="{{ route('update-pin-status', ['id' => $product->id , 'status' => $product->pinned ]) }}"  class="btn btn-success btn-sm btn-block"><i class="fas fa-thumbtack"></i> Pin Product</a>
                                                     @endif
-                                                    <a href="{{ url('product-description/'. $product->id) }}"
-                                                        class="btn btn-info btn-sm btn-block"> <i class="fas fa-angle-double-right"></i> Description</a>
 
                                                     <a href="{{ url('delete-product/'. $product->id) }}"
                                                         id="delete" class="btn btn-danger btn-sm btn-block"><i
@@ -174,7 +172,7 @@
                                     <span class="text-danger validate" data-field="thumbnail"></span>
                                 </div>
                                 <div>
-                                    <img class="d-none" src="" id="previewThumbnail" width="180px" alt="">
+                                    <img class="d-none" src="" id="previewThumbnail" width="50%" alt="">
                                 </div>
                             </div>
                             <div class="col-6">
@@ -184,7 +182,7 @@
                                     <span class="text-danger validate" data-field="hover_image"></span>
                                 </div>
                                 <div>
-                                    <img class="d-none" src="" id="hoverImage" width="180px" alt="">
+                                    <img class="d-none" src="" id="hoverImage" width="50%" alt="">
                                 </div>
                             </div>
                         </div>
@@ -565,6 +563,7 @@
 
     <script>
         $(document).ready(function () {
+
             //SHOW IMAGE WHEN UPLOAD
             $("#thumbnail").change(function() {
                 pleasePreview(this, 'previewThumbnail');

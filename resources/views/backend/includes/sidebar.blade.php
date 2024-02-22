@@ -63,8 +63,8 @@
                 </li>
               </ul>
           </li>
-          <li class="nav-item {{ request()->is(['category', 'sub-category', 'products', 'sizes-colors']) ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{  request()->is(['category', 'sub-category', 'products', 'sizes-colors']) ? 'active' : ''  }}">
+          <li class="nav-item {{ request()->is(['category', 'sub-category', 'products', 'sizes-colors', 'add-product']) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{  request()->is(['category', 'sub-category', 'products', 'sizes-colors', 'add-product']) ? 'active' : ''  }}">
                 <i class="nav-icon fas fa-parking"></i>
               <p>
                 Product Management
@@ -94,6 +94,12 @@
                 <a href="{{ route('products') }}" class="nav-link {{ request()->is(['products']) ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Product</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('add-product') }}" class="nav-link {{ request()->is(['add-product']) ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Add Product</p>
                 </a>
               </li>
             </ul>

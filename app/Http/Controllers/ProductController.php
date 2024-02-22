@@ -19,17 +19,28 @@ class ProductController extends Controller
     //VIEW INDEX
     public function index()
     {
-        $data['categories'] = Category::get();
         $data['products'] = Product::paginate(10);
         $data['trashProducts'] = Product::onlyTrashed()->get();
+        $data['categories'] = Category::get();
         $data['sizes'] = Size::get();
         $data['colors'] = Color::get();
         return view('backend.product.product', $data);
     }
 
+    //ADD PRODUCT
+    public function addProduct()
+    {
+        $data['categories'] = Category::get();
+        $data['sizes'] = Size::get();
+        $data['colors'] = Color::get();
+        return view('backend.product.addproduct', $data);
+    }
+
     //STORE PRODUCT
     public function storeProduct(Request $request)
     {
+        return $request;
+        die();
         $request->validate(
             [
                 'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
@@ -289,117 +300,22 @@ class ProductController extends Controller
         return response()->json($data);
     }
 
-    //--------------------------------PRODUCT DESCRIPTION START---------------------------------
-    public function productDescriptionIndex($id)
+    public function getSizesAjax(Request $request)
     {
-       $data['product'] = Product::findOrFail($id);
-       $data['trashProductDescription'] = ProductDescription::onlyTrashed()->get();
-       $data['productDescriptions'] = ProductDescription::where('product_id', $id)->paginate(10);
-       return view('backend.product.productDescription.product_description', $data);
-    }
+        if (empty($request->selectedSizes)) {
+            return response()->json(['processedData' => 0]);
+        } else {
+            foreach ($request->selectedSizes as $value) {
+                $result = Size::where('id', $value)->first();
+                $processedData[] = $result;
+            }
+            return response()->json(['processedData' => $processedData]);
+        }
 
-    public function storeProductDescription(Request $request)
-    {
-       $request->validate(
-           [
-               'product_id' => 'required|integer',
-               'active_status' => 'required|integer',
-               'content' => 'required|string',
-           ],
-           [
-               'product_id.required' => 'Required',
-               'active_status.required' => 'Active Status Is Required',
-               'content.required' => 'Please Write Or Past The Content',
-           ],
-       );
 
-       $productDes = new ProductDescription();
-       $productDes->product_id = $request->product_id;
-       $productDes->active_status = $request->active_status;
-       $productDes->content = $request->content;
-       $productDes->created_by = Auth::id();
-       $productDes->save();
-
-       if ($productDes) {
-           return response()->json([
-               'success' => 'Product Description Added Successfully',
-           ]);
-       } else {
-           return response()->json([
-               'success' => 'Something Failed',
-           ]);
-       }
     }
 
 
-    public function editProductDescription(Request $request)
-    {
-       $request->validate(
-           [
-               'product_id' => 'required|integer',
-               'active_status_e' => 'required|integer',
-               'content_e' => 'required|string',
-           ],
-           [
-               'product_id.required' => 'Required',
-               'active_status_e.required' => 'Active Status Is Required',
-               'content_e.required' => 'Please Write Or Past The Content',
-           ],
-       );
-
-       $productDes = ProductDescription::findOrFail($request->id_e);
-       $productDes->product_id = $request->product_id;
-       $productDes->active_status = $request->active_status_e;
-       $productDes->content = $request->content_e;
-       $productDes->updated_by = Auth::id();
-       $productDes->save();
-
-       if ($productDes) {
-           return response()->json([
-               'success' => 'Product Description Updated Successfully',
-           ]);
-       } else {
-           return response()->json([
-               'success' => 'Something Wrong',
-           ]);
-       }
-    }
-
-    //DELETE PRODUCT DESCRIPTION
-    public function deleteProductDescription($id)
-    {
-        $slider = ProductDescription::findOrFail($id)->delete();
-        return redirect()->back();
-    }
-
-    //RESTORE PRODUCT DESCRIPTION
-    public function resotoreProductDescription($id)
-    {
-        ProductDescription::onlyTrashed()->find($id)->restore();
-        return back()->with('message', 'Product Description Restored Successfully');
-    }
-
-    //RESTORE ALL PRODUCT DESCRIPTION
-    public function resotoreAllProductDescription()
-    {
-        ProductDescription::onlyTrashed()->where('deleted_at', '!=' , null)->restore();
-        return back()->with('message', 'All Product Description Restored Successfully');
-    }
-
-    // FORCE DELETE PRODUCT DESCRIPTION
-    public function forceDeleteProductDescription($id)
-    {
-        $slider = ProductDescription::onlyTrashed()->find($id);
-        $slider->forceDelete();
-        return back()->with('message', 'Product Description Deleted Permanently');
-    }
-
-    // FORCE DELETE ALL PRODUCT DESCRIPTION
-    public function forceDeleteAllProductDescription()
-    {
-        $trushSlider = ProductDescription::onlyTrashed()->where('deleted_at', '!=' , null)->forceDelete();
-        return back()->with('message', 'All Product Description Permanently Deleted');
-    }
 
 
 }
