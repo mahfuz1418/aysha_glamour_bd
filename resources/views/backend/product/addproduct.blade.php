@@ -44,29 +44,31 @@
                                     <div class="col-12 row my-3">
                                         <div class="col-lg-2 col-md-4 col-sm-6" >
                                             <label for="">Thumbnail <small class="text-danger">(Required)</small></label>
-                                            <input name="file1" type="file" class="dropify1" data-height="100" />
+                                            <input name="image1" type="file" class="dropify1" data-height="100" />
                                         </div>
                                         <div class="col-lg-2 col-md-4 col-sm-6" >
                                             <label for="">Hover Img <small class="text-danger">(Required)</small></label>
-                                            <input name="file1" type="file" class="dropify2" data-height="100" />
+                                            <input name="image2" type="file" class="dropify2" data-height="100" />
                                         </div>
                                         <div class="col-lg-2 col-md-4 col-sm-6" >
                                             <label for="">Image No 3 <small class="text-info">(Optional)</small></label>
-                                            <input name="file1" type="file" class="dropify3" data-height="100" />
+                                            <input name="image3" type="file" class="dropify3" data-height="100" />
                                         </div>
                                         <div class="col-lg-2 col-md-4 col-sm-6" >
                                             <label for="">Image No 4 <small class="text-info">(Optional)</small></label>
-                                            <input name="file1" type="file" class="dropify4" data-height="100" />
+                                            <input name="image4" type="file" class="dropify4" data-height="100" />
                                         </div>
                                         <div class="col-lg-2 col-md-4 col-sm-6" >
                                             <label for="">Image No 5 <small class="text-info">(Optional)</small></label>
-                                            <input name="file1" type="file" class="dropify5" data-height="100" />
+                                            <input name="image5" type="file" class="dropify5" data-height="100" />
                                         </div>
                                         <div class="col-lg-2 col-md-4 col-sm-6" >
                                             <label for="">Image No 6 <small class="text-info">(Optional)</small></label>
-                                            <input name="file1" type="file" class="dropify6" data-height="100" />
+                                            <input name="image6" type="file" class="dropify6" data-height="100" />
                                         </div>
                                     </div>
+                                    <span class="text-danger validate" data-field="image1"></span><br>
+                                    <span class="text-danger validate" data-field="image2"></span>
                                 </div>
 
                             </div>
@@ -125,10 +127,8 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="slug">Description</label>
-                                    <textarea id="summernote" name="editordata" rows="10"></textarea>
-
-
-                                    <span class="text-danger validate" data-field="slug"></span>
+                                    <textarea id="summernote" name="description" ></textarea>
+                                    <span class="text-danger validate" data-field="description"></span>
                                 </div>
                             </div>
                         </div>
@@ -139,8 +139,8 @@
                                     <div class="select2-purple">
                                       <select class="select2" multiple="multiple" data-placeholder="Select Colors" data-dropdown-css-class="select2-purple" name="colors[]" style="width: 100%;">
                                         @foreach ($colors as $color)
-                                        <option value="{{ $color->id }}">{{ $color->color }}</option>
-                                    @endforeach
+                                            <option value="{{ $color->id }}">{{ $color->color }}</option>
+                                        @endforeach
                                       </select>
                                     <span class="text-danger validate" data-field="colors"></span>
                                     </div>
@@ -165,7 +165,7 @@
                             <div class="col-md-12 col-lg-6">
                                 <div class="form-group">
                                     <div class="custom-control custom-switch mb-2">
-                                        <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                                        <input type="checkbox" name="checkdata" class="custom-control-input" id="customSwitch1">
                                         <label class="custom-control-label" for="customSwitch1">Select Sizes and Enter Price</label>
                                     </div>
                                     <div class="select2-purple" style="display: none" id="content1">
@@ -402,65 +402,6 @@
                              }
                         });
                     },
-                    // complete: function(done) {
-                    //     if (done.status == 200) {
-                    //         window.location.reload();
-                    //     }
-                    // }
-
-                });
-            });
-
-            // SHOW DATA WHEN CLICK ON EDIT BUTTON
-            $('.editData').click(function (e) {
-                e.preventDefault();
-                $('#editmodal').modal('show');
-                $('.validate_e').text('');
-
-                var category_id = $(this).data('category_id');
-                console.log(category_id);
-                var subcategory_id = $(this).data('sub_category_id');
-                $('#category_id_e').val(category_id).trigger('change');
-                getSubcategory(category_id, subcategory_id);
-
-                $('#id_e').val($(this).data('id'));
-                $('#name_e').val($(this).data('sizes'));
-                $('#slug_e').val($(this).data('slug'));
-                $('#selling_price_e').val($(this).data('selling_price'));
-                $('#stock_e').val($(this).data('stock'));
-                // $('#sizes_e').val($(this).data('sizes')).trigger('change');
-                // $('#colors_e').val($(this).data('colors')).trigger('change');
-                $('#active_status_e').val($(this).data('active_status')).trigger('change');
-            });
-
-            // EDIT Products
-            $("#updateData").submit(function(e) {
-                e.preventDefault();
-                var formdata = new FormData($("#updateData")[0]);
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('edit-product') }}",
-                    contentType: false,
-                    processData: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: formdata,
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success(response.success);
-                        }
-                    },
-                    error: function (error) {
-                        $('.validate_e').text('');
-                        $.each(error.responseJSON.errors, function (field_name, error) {
-                             const errorElement = $('.validate_e[data-field="' + field_name + '"]');
-                             if (errorElement.length > 0) {
-                                errorElement.text(error[0]);
-                                toastr.error(error);
-                             }
-                        });
-                    },
                     complete: function(done) {
                         if (done.status == 200) {
                             window.location.reload();
@@ -469,6 +410,9 @@
 
                 });
             });
+
+
+
 
             //GET SUBCATEGORY VIA CATEGORY (AJAX)
             $("#category_id").change(function (e) {

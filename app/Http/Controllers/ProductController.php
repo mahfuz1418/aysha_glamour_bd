@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Product;
+use App\Models\ProductAttribute;
+use App\Models\ProductColor;
 use App\Models\ProductDescription;
 use App\Models\Size;
 use App\Models\SubCategory;
@@ -39,66 +41,117 @@ class ProductController extends Controller
     //STORE PRODUCT
     public function storeProduct(Request $request)
     {
-        return $request;
-        die();
         $request->validate(
             [
-                'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
-                'hover_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                'name' => 'required|string|max:255',
+                'slug' => "required|string|max:255|unique:products,slug",
+                'description' => 'required',
+                'image1' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                'image2' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                'image3' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                'image4' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                'image5' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                'image6' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5120',
                 'category_id' => 'required|numeric',
                 'sub_category_id' => 'required|numeric',
-                // 'name' => 'required|string|max:255',
-                // 'colors' => 'max:255',
+                'colors' => 'max:255',
                 'sizes' => 'max:255',
-                'slug' => "required|string|max:255|unique:products,slug",
-                'selling_price' => 'required|numeric',
-                'stock' => 'required|numeric',
                 'active_status' => 'required|in:0,1',
             ],
             [
-                'thumbnail.required' => 'Please Choose a Thumbnail',
-                'hover_image.required' => 'Please Choose a Hover Image',
+                'name.required' => 'Product Name Is Required',
+                'description.required' => 'Product Description Is Required',
+                'image1.required' => 'Product Thumbnail is required',
+                'image2.required' => 'Product Hover Image is required',
                 'category_id.required' => 'Product Category Is Required',
                 'sub_category_id.required' => 'Product Subcategory Is Required',
-                // 'name.required' => 'Product Name Is Required',
-                // 'slug.required' => 'Product Slug Is Required',
-                'selling_price.required' => 'Product Selling Price Is Required',
-                'stock.required' => 'Stock Is Required',
                 'active_status.required' => 'Product Active Status Is Required',
             ],
         );
-        $image = '';
-        if ($request->file('thumbnail')) {
-            $image = uploadPlease($request->file('thumbnail'));
-        }
         $image1 = '';
-        if ($request->file('hover_image')) {
-            $image1 = uploadPlease($request->file('hover_image'));
+        if ($request->file('image1')) {
+            $image1 = uploadPlease($request->file('image1'));
+        }
+        $image2 = '';
+        if ($request->file('image2')) {
+            $image2 = uploadPlease($request->file('image2'));
+        }
+        $image3 = '';
+        if ($request->file('image3')) {
+            $image3 = uploadPlease($request->file('image3'));
+        }
+        $image4 = '';
+        if ($request->file('image4')) {
+            $image4 = uploadPlease($request->file('image4'));
+        }
+        $image5 = '';
+        if ($request->file('image5')) {
+            $image5 = uploadPlease($request->file('image5'));
+        }
+        $image6 = '';
+        if ($request->file('image6')) {
+            $image6 = uploadPlease($request->file('image6'));
         }
 
         $category_name = Category::where('id', $request->category_id)->value('name');
         $sub_category_name = SubCategory::where('id', $request->sub_category_id)->value('name');
 
         $product = new Product();
+        $product->name = $request->name;
+        $product->slug = $request->slug;
+        $product->thumbnail = $image1;
+        $product->hover_image = $image2;
+        $product->image3 = $image3;
+        $product->image4 = $image4;
+        $product->image5 = $image5;
+        $product->image6 = $image6;
+        $product->description = $request->description;
         $product->category_id = $request->category_id;
         $product->category_name = $category_name;
         $product->sub_category_id = $request->sub_category_id;
         $product->sub_category_name = $sub_category_name;
-        $product->name = $request->name;
-        $product->slug = $request->slug;
-        $product->selling_price = $request->selling_price;
-        $product->stock = $request->stock;
         $product->active_status = $request->active_status;
-        $product->thumbnail = $image;
-        $product->hover_image = $image1;
         $product->created_by = Auth::id();
-
-        // $sizes = implode(',', $request->sizes);
-        $product->sizes = $request->sizes;
-        // $colors = implode(',', $request->colors);
-        $product->colors = $request->colors;
-
         $product->save();
+
+        //Product Color Option
+        foreach ($request->colors as $color) {
+            ProductColor::create([
+                'product_id' => $product->id,
+                'product_color' => $color,
+                'created_by' => Auth::id(),
+            ]);
+        }
+
+        //Product Attribute Option
+        if ($request->checkdata == "on") {
+            $request->validate([
+                'price' => 'required|max:255',
+                'sizes' => "required|max:255",
+                'stockbysize' => 'required|max:255',
+            ]);
+            foreach (array_map(null, $request->sizes, $request->stockbysize, $request->price) as [$sizes, $stock, $price]) {
+                ProductAttribute::create([
+                    'product_id' => $product->id,
+                    'size' => $sizes,
+                    'price' => $price,
+                    'stock' => $stock,
+                    'created_by' => Auth::id(),
+                ]);
+            }
+        } else {
+            $request->validate([
+                'selling_price' => 'required|max:255',
+                'stock' => 'required|max:255',
+            ]);
+            ProductAttribute::create([
+                'product_id' => $product->id,
+                'price' => $request->selling_price,
+                'stock' => $request->stock,
+                'created_by' => Auth::id(),
+            ]);
+        }
+
 
         if ($product) {
             return response()->json([
