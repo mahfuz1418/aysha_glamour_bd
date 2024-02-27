@@ -60,7 +60,12 @@
                                             <th scope="row">{{ $serials++ }}</th>
                                             <td>{{ $size->size }}</td>
                                             <td>
-                                                <a href="{{ url('delete-size/'. $size->id) }}" id="delete" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                                <button type="button" data-toggle="modal" data-target="#editSize"
+                                                    data-id="{{ $size->id }}"
+                                                    data-size="{{ $size->size }}"
+                                                    class="btn btn-success btn-sm editData">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
 
                                             </td>
                                         </tr>
@@ -129,7 +134,13 @@
                                                 <div style="background-color: {{ $color->color_code }}; width: 20px; padding: 10px 20px; height: 10px; border: 2px solid gray; margin: 0px 10px; "></div>
                                             </td>
                                             <td>
-                                                <a href="{{ url('delete-color/'. $color->id) }}" id="delete" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                                <button type="button" data-toggle="modal" data-target="#editColor"
+                                                    data-id="{{ $color->id }}"
+                                                    data-color="{{ $color->color }}"
+                                                    data-color_code="{{ $color->color_code }}"
+                                                    class="btn btn-success btn-sm editColorBtn">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
 
                                             </td>
                                         </tr>
@@ -151,8 +162,82 @@
         </div>
     </section>
 
+    <!---Edit Size Modal--->
+    <div class="modal fade" id="editSize" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Edit Size</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="editSizeData">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="size_e">Size</label>
+                            <input type="text" hidden name="id_e" id="id_e">
+                            <input type="text" class="form-control" name="size_e" id="size_e" >
 
-</div>
+                            <span class="text-danger validate_e" data-field="size_e"></span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!---Edit Color Modal--->
+    <div class="modal fade" id="editColor" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Edit Color</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="editColorForm">
+                    {{-- <input type="text" name="id_e" id="id_c_e"> --}}
+                    <div class="mb-3">
+                      <label for="color_e" class="form-label">Edit Color</label>
+                      <input type="text" class="form-control" id="color_e" name="color_e" placeholder="Add Colors">
+                      <span class="text-danger validate_e" data-field="color_e"></span>
+
+                      <div class="form-group">
+                        <label>Edit Color Code</label>
+
+                        <div class="input-group my-colorpicker2">
+                          <input type="text" class="form-control" id="color_code_e" name="color_code_e" placeholder="Enter Color Code">
+
+                          <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-square"></i></span>
+                          </div>
+                        </div>
+                        <span class="text-danger validate_e" data-field="color_code_e"></span>
+                        <!-- /.input group -->
+                      </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+    </div>
 
 
 @endsection
@@ -161,6 +246,20 @@
 
     <script>
         $(document).ready(function () {
+
+            // SHOW DATA WHEN CLICK ON EDIT SIZE BUTTON
+            $('.editData').click(function (e) {
+                $('#id_e').val($(this).data('id'));
+                $('#size_e').val($(this).data('size'));
+            });
+
+            // SHOW DATA WHEN CLICK ON EDIT COLOR BUTTON
+            $('.editColorBtn').click(function (e) {
+                $('#id_c_e').val($(this).data('id'));
+                $('#color_e').val($(this).data('color'));
+                $('#color_code_e').val($(this).data('color_code'));
+            });
+
             // STORE SIZE
             $("#addSize").submit(function(e) {
                 e.preventDefault();
@@ -183,6 +282,43 @@
                         $('.validate').text('');
                         $.each(error.responseJSON.errors, function (field_name, error) {
                              const errorElement = $('.validate[data-field="' + field_name + '"]');
+                             if (errorElement.length > 0) {
+                                errorElement.text(error[0]);
+                                toastr.error(error);
+                             }
+                        });
+                    },
+                    complete: function(done) {
+                        if (done.status == 200) {
+                            window.location.reload();
+                        }
+                    }
+
+                });
+            });
+
+            // EDIT SIZE
+            $("#editSizeData").submit(function(e) {
+                e.preventDefault();
+                var editSize = new FormData($("#editSizeData")[0]);
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('edit-size') }}",
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: editSize,
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.success);
+                        }
+                    },
+                    error: function (error) {
+                        $('.validate').text('');
+                        $.each(error.responseJSON.errors, function (field_name, error) {
+                             const errorElement = $('.validate_e[data-field="' + field_name + '"]');
                              if (errorElement.length > 0) {
                                 errorElement.text(error[0]);
                                 toastr.error(error);
@@ -230,6 +366,43 @@
                             window.location.reload();
                         }
                     }
+
+                });
+            });
+
+             // EDIT COLOR
+             $("#editColorForm").submit(function(e) {
+                e.preventDefault();
+                var editcolor = new FormData($("#editColorForm")[0]);
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('edit-color') }}",
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: editcolor,
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.success);
+                        }
+                    },
+                    error: function (error) {
+                        $('.validate').text('');
+                        $.each(error.responseJSON.errors, function (field_name, error) {
+                             const errorElement = $('.validate_e[data-field="' + field_name + '"]');
+                             if (errorElement.length > 0) {
+                                errorElement.text(error[0]);
+                                toastr.error(error);
+                             }
+                        });
+                    },
+                    // complete: function(done) {
+                    //     if (done.status == 200) {
+                    //         window.location.reload();
+                    //     }
+                    // }
 
                 });
             });

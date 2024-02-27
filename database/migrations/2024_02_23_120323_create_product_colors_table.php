@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('product_colors', function (Blueprint $table) {
             $table->id();
             $table->integer('product_id');
-            $table->string('product_color')->nullable();
+            $table->integer('product_color_id');
             $table->foreignId('created_by');
             $table->foreignId('updated_by')->nullable();
             $table->timestamps();

@@ -44,27 +44,27 @@
                                     <div class="col-12 row my-3">
                                         <div class="col-lg-2 col-md-4 col-sm-6" >
                                             <label for="">Thumbnail <small class="text-danger">(Required)</small></label>
-                                            <input name="image1" type="file" class="dropify1" data-height="100" />
+                                            <input name="image1" type="file" class="dropify1" data-height="100" data-default-file="{{ asset($product->thumbnail) }}" />
                                         </div>
                                         <div class="col-lg-2 col-md-4 col-sm-6" >
                                             <label for="">Hover Img <small class="text-danger">(Required)</small></label>
-                                            <input name="image2" type="file" class="dropify2" data-height="100" />
+                                            <input name="image2" type="file" class="dropify2" data-height="100" data-default-file="{{ asset($product->hover_image) }}" />
                                         </div>
                                         <div class="col-lg-2 col-md-4 col-sm-6" >
                                             <label for="">Image No 3 <small class="text-info">(Optional)</small></label>
-                                            <input name="image3" type="file" class="dropify3" data-height="100" />
+                                            <input name="image3" type="file" class="dropify3" data-height="100" data-default-file="{{ asset($product->hover_image) }}" />
                                         </div>
                                         <div class="col-lg-2 col-md-4 col-sm-6" >
                                             <label for="">Image No 4 <small class="text-info">(Optional)</small></label>
-                                            <input name="image4" type="file" class="dropify4" data-height="100" />
+                                            <input name="image4" type="file" class="dropify4" data-height="100" data-default-file="{{ asset($product->image4) }}" />
                                         </div>
                                         <div class="col-lg-2 col-md-4 col-sm-6" >
                                             <label for="">Image No 5 <small class="text-info">(Optional)</small></label>
-                                            <input name="image5" type="file" class="dropify5" data-height="100" />
+                                            <input name="image5" type="file" class="dropify5" data-height="100" data-default-file="{{ asset($product->image5) }}" />
                                         </div>
                                         <div class="col-lg-2 col-md-4 col-sm-6" >
                                             <label for="">Image No 6 <small class="text-info">(Optional)</small></label>
-                                            <input name="image6" type="file" class="dropify6" data-height="100" />
+                                            <input name="image6" type="file" class="dropify6" data-height="100" data-default-file="{{ asset($product->image6) }}" />
                                         </div>
                                     </div>
                                     <span class="text-danger validate" data-field="image1"></span><br>
@@ -230,7 +230,6 @@
             </div><!-- /.container-fluid -->
           </section>
           <!-- /.content -->
-
 
 
 </div>

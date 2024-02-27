@@ -55,7 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/products', [ProductController::class, 'index'])->name('products');
     Route::get('/add-product', [ProductController::class, 'addProduct'])->name('add-product');
     Route::post('/store-product', [ProductController::class, 'storeProduct'])->name('store-product');
-    Route::post('/edit-product', [ProductController::class, 'editProduct'])->name('edit-product');
+    Route::get('/edit-product/{id}', [ProductController::class, 'editProduct'])->name('edit-product');
+    Route::post('/update-product', [ProductController::class, 'updateProduct'])->name('update-product');
     Route::get('/delete-product/{id}', [ProductController::class, 'deleteProduct'])->name('delete-product');
     Route::get('/restore-product/{id}', [ProductController::class, 'resotoreProduct'])->name('restore-product');
     Route::get('/restore-all-product', [ProductController::class, 'resotoreAllProduct'])->name('restore-all-Product');
@@ -69,9 +70,9 @@ Route::middleware('auth')->group(function () {
     // sizes & Colors
     Route::get('/sizes-colors', [SizeColorController::class, 'index'])->name('sizes-colors');
     Route::post('/add-sizes', [SizeColorController::class, 'addSizes'])->name('add-sizes');
-    Route::get('/delete-size/{id}', [SizeColorController::class, 'deleteSize'])->name('delete-size');
+    Route::post('/edit-size', [SizeColorController::class, 'editSize'])->name('edit-size');
     Route::post('/add-colors', [SizeColorController::class, 'addColors'])->name('add-colors');
-    Route::get('/delete-color/{id}', [SizeColorController::class, 'deleteColor'])->name('delete-color');
+    Route::post('/edit-color', [SizeColorController::class, 'editColor'])->name('edit-color');
 
     // Home Page
     Route::get('/home-slider', [HomeSliderController::class, 'index'])->name('home-slider');

@@ -47,12 +47,35 @@ class SizeColorController extends Controller
         }
     }
 
-    //DELETE SIZE
-    public function deleteSize($id)
+
+    //EDIT SIZE
+    public function editSize(Request $request)
     {
-        Size::findOrFail($id)->delete();
-        return redirect()->back();
+        $request->validate(
+            [
+                'size_e' => 'required',
+            ],
+            [
+                'size_e.required' => 'Size Field Is Required',
+            ],
+        );
+        $id = $request->id_e;
+        $size = Size::findOrFail($id);
+        $size->size = strtoupper($request->size_e);
+        $size->created_by = Auth::id();
+        $size->save();
+
+        if ($size) {
+            return response()->json([
+                'success' => "Size Updated successfully",
+            ]);
+        } else {
+            return response()->json([
+                'success' => "Something went wrong",
+            ]);
+        }
     }
+
 
     //STORE COLORS
     public function addColors(Request $request)
@@ -85,10 +108,37 @@ class SizeColorController extends Controller
         }
     }
 
-    //DELETE COLORS
-    public function deleteColor($id)
+    //EDIT COLORS
+    public function editColor(Request $request)
     {
-        Color::findOrFail($id)->delete();
-        return redirect()->back();
+        return $request;
+        die();
+        $request->validate(
+            [
+                'color_e' => 'required|unique:colors,color',
+                'color_code_e' => 'required|unique:colors,color_code',
+            ],
+            [
+                'color_e.required' => 'Color Field Is Required',
+                'color_code_e.required' => 'Color Code Field Is Required',
+            ],
+        );
+        $id = $request->id_e;
+        $color = Color::findOrFail($id);
+        $color->color = $request->color_e;
+        $color->color_code = $request->color_code_e;
+        $color->created_by = Auth::id();
+        $color->save();
+
+        if ($color) {
+            return response()->json([
+                'success' => "Color Edited successfully",
+            ]);
+        } else {
+            return response()->json([
+                'success' => "Something went wrong",
+            ]);
+        }
     }
+
 }

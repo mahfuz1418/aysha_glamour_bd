@@ -284,13 +284,13 @@
     </script>
 
     {{-- CLEAR TEXT BY CLICKING BUTTON  --}}
-    {{-- <script>
+    <script>
         document.querySelector('.myCategory').addEventListener('click', function(e) {
             e.preventDefault();
             document.querySelector('#categoryName').value = "";
             document.querySelector('#slug').value = "";
         });
-    </script> --}}
+    </script>
 
     <script>
         $(document).ready(function () {

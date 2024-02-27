@@ -24,9 +24,9 @@ class ProductController extends Controller
         $data['products'] = Product::paginate(10);
         $data['trashProducts'] = Product::onlyTrashed()->get();
         $data['categories'] = Category::get();
-        $data['sizes'] = Size::get();
-        $data['colors'] = Color::get();
-        return view('backend.product.product', $data);
+        // $data['sizes'] = Size::get();
+        // $data['colors'] = Color::get();
+        return view('backend.product.allproducts', $data);
     }
 
     //ADD PRODUCT
@@ -118,7 +118,7 @@ class ProductController extends Controller
         foreach ($request->colors as $color) {
             ProductColor::create([
                 'product_id' => $product->id,
-                'product_color' => $color,
+                'product_color_id' => $color,
                 'created_by' => Auth::id(),
             ]);
         }
@@ -152,7 +152,6 @@ class ProductController extends Controller
             ]);
         }
 
-
         if ($product) {
             return response()->json([
                 'success' => "Product Added successfully",
@@ -164,8 +163,18 @@ class ProductController extends Controller
         }
     }
 
+
     //EDIT PRODUCT
-    public function editProduct(Request $request)
+    public function editProduct($id)
+    {
+        $data['product'] = Product::findOrFail($id);
+        $data['categories'] = Category::get();
+        $data['sizes'] = Size::get();
+        $data['colors'] = Color::get();
+        return view('backend.product.editproduct', $data);
+    }
+    //UPDATE PRODUCT
+    public function updateProduct(Request $request)
     {
         $request->validate(
             [

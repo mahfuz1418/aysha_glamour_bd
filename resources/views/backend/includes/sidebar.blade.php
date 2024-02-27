@@ -91,15 +91,15 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('products') }}" class="nav-link {{ request()->is(['products']) ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Product</p>
-                </a>
-              </li>
-              <li class="nav-item">
                 <a href="{{ route('add-product') }}" class="nav-link {{ request()->is(['add-product']) ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Add Product</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('products') }}" class="nav-link {{ request()->is(['products']) ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>All Products</p>
                 </a>
               </li>
             </ul>
